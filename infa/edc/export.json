@@ -1,0 +1,237 @@
+{
+    "testSuite": false, 
+    "tasks": [
+        {
+            "inputs": {
+                "type": "java.util.HashMap"
+            }, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "copy app props", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "cp", 
+                        "environment": [], 
+                        "arguments": [
+                            "\"${infa.edc.common.logDir}/${infa.edc.common.SCN}/spark/application.properties\"", 
+                            "${EDC_EXPORT_DIR}"
+                        ], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Copy export jar to CWD", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "cp", 
+                        "environment": [], 
+                        "arguments": [
+                            "${BINDIR}/edc/export/export.jar", 
+                            "${EDC_EXPORT_DIR}"
+                        ], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {
+                        "CS_MODE": "READONLYMODE"
+                    }, 
+                    "subTasks": [], 
+                    "name": "Put CS in readonly mode", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.edc.common.Set catalog mode", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "export", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "${infa.isp.common.INFA_HOME}/java/bin/java", 
+                        "environment": [
+                            "${infa.isp.common.INFA_TRUSTSTORE}", 
+                            "${infa.isp.common.INFA_TRUSTSTORE_PASSWORD}"
+                        ], 
+                        "arguments": [
+                            "-jar", 
+                            "export.jar", 
+                            "export"
+                        ], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "${EDC_EXPORT_DIR}", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "Take the catalog backup using export utility"
+                }, 
+                {
+                    "inputs": {
+                        "CS_MODE": "REGULAR"
+                    }, 
+                    "subTasks": [], 
+                    "name": "Put CS back in REGULAR mode", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.edc.common.Set catalog mode", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }
+            ], 
+            "name": "export", 
+            "userInputs": [], 
+            "args": {
+                "artifacts": [], 
+                "cmd": "", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "noopTask", 
+            "failFast": true, 
+            "description": "Back up the catalog data using the export utility so that you can restore catalog data after you upgrade"
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "export pkfk enrichment", 
+            "userInputs": [], 
+            "args": {
+                "artifacts": [], 
+                "cmd": "${infa.isp.common.INFA_HOME}/java/bin/java -jar ${BINDIR}/edc/export-enrichment/PKFKEnrichmentsRestoreUtility.jar", 
+                "environment": [], 
+                "arguments": [
+                    "export", 
+                    "${infa.edc.common.edcHost} ${infa.edc.common.edcPort}", 
+                    "${infa.isp.common.userName} ${infa.isp.common.password}", 
+                    "${infa.misc.edcupgrade.EXPORT_DIR}/pkfkenrichments.json", 
+                    "${infa.edc.common.CatalogResourcesString}", 
+                    "${infa.isp.common.isDomainSSL}"
+                ], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "${EDC_EXPORT_DIR}", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "description": "Exports the Pk-Fk enrichment for 10.5 restore"
+        }
+    ], 
+    "name": "export", 
+    "variables": [], 
+    "myDir": "/modules", 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": ""
+}

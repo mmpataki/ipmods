@@ -1,0 +1,33 @@
+{
+    "testSuite": true, 
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "Auth issues because of solr node time skew", 
+            "userInputs": [], 
+            "args": {
+                "artifacts": [], 
+                "cmd": "test 1 = 2", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "executionType": {
+                "type": "local"
+            }, 
+            "nameResolvers": [], 
+            "mitigationSteps": "Refer the below KB for resolution\n\nhttps://knowledge.informatica.com/s/article/ICS-marks-few-solr-nodes-as-down-even-though-solr-process-is-running-and-responding", 
+            "type": "testTask", 
+            "description": "When the time on the Solr servers are not in sync (the time difference is more than 15 seconds) the authentication between the solr nodes fail, resulting in a node outage."
+        }
+    ], 
+    "name": "solr", 
+    "variables": [], 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": "Tests for known issues in 10.5 solr"
+}

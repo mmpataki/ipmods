@@ -1,0 +1,120 @@
+{
+    "testSuite": false, 
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "userNotice": "", 
+            "name": "runJdbcc", 
+            "singleOutput": true, 
+            "userInputs": [
+                {
+                    "possibleValue": "", 
+                    "description": "Classpath entries including JDBC jar", 
+                    "name": "jdbcc_driver_classpath", 
+                    "title": "jdbcc_driver_classpath"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "Driver class name", 
+                    "name": "jdbcc_driver", 
+                    "title": "jdbcc_driver"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "JDBC connection string", 
+                    "name": "jdbcc_connection_string", 
+                    "title": "jdbcc_connection_string"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "User name", 
+                    "name": "jdbcc_user", 
+                    "title": "jdbcc_user"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "Password", 
+                    "name": "jdbcc_password", 
+                    "title": "jdbcc_password"
+                }
+            ], 
+            "description": "Run jdbcc", 
+            "args": {
+                "inheritIo": true, 
+                "artifacts": [], 
+                "cmd": "./compile.sh\n${infa.isp.common.INFA_HOME}/java/bin/java \\\n  -cp \".:${jdbcc_driver_classpath}\" \\\n  JDBCClient \\\n  -d \"${jdbcc_driver}\" \\\n  -c \"${jdbcc_connection_string}\" \\\n  -u \"${jdbcc_user}\" \\\n  -p \"${jdbcc_password}\"", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "${infa.isp.common.INFA_HOME}/tools/debugtools/jdbcc", 
+                "captureOutputs": false
+            }, 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "interactive": true
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "userNotice": "", 
+            "name": "attachIa4j", 
+            "singleOutput": true, 
+            "userInputs": [
+                {
+                    "possibleValue": "", 
+                    "description": "Ia4j config file", 
+                    "name": "ia4j_config", 
+                    "title": "ia4j_config"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "PID of the process", 
+                    "name": "pid", 
+                    "title": "pid"
+                }
+            ], 
+            "description": "Attaches Ia4j to given program", 
+            "args": {
+                "inheritIo": true, 
+                "artifacts": [], 
+                "cmd": "echo \"${pid}\" |\n${infa.isp.common.INFA_HOME}/java/bin/java \\\n  -classpath \"${infa.isp.common.INFA_HOME}/java/lib/tools.jar:${infa.isp.common.INFA_HOME}/tools/debugtools/ia4j/ia4j.jar\" \\\n  com.informatica.ia4j.AttachVM \\\n  ${infa.isp.common.INFA_HOME}/tools/debugtools/ia4j/ia4j.jar \\\n  ${ia4j_config}", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "interactive": true
+        }
+    ], 
+    "name": "java", 
+    "variables": [], 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": "java related stuff"
+}

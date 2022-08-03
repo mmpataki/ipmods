@@ -1,0 +1,254 @@
+{
+    "testSuite": false, 
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Delete old version files", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "/bin/rm -f probes.zip;", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "${PROBES_HOME}", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Download new version", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "wget -O probes.zip \"${probes.management.Probes master URL}/probes.zip\"", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "${PROBES_HOME}", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Install new version", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "rm -rf modules; unzip -o probes.zip", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "${PROBES_HOME}", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Restart application", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "probes.management.Restart aplication", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }
+            ], 
+            "name": "Upgrade probes", 
+            "userInputs": [], 
+            "args": {
+                "ref": "", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "noopTask", 
+            "failFast": true, 
+            "description": ""
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "Zip new installation", 
+            "userInputs": [], 
+            "args": {
+                "artifacts": [], 
+                "cmd": "zip -r probes.zip probes.jar modules", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "${PROBES_HOME}", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "description": ""
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "Restart aplication", 
+            "userInputs": [], 
+            "args": {
+                "artifacts": [], 
+                "cmd": "ps -ef | grep '[p]robes.jar' | awk '{print $2}' | xargs kill; bash ${PROBES_HOME}/probes > nohup.out", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "${PROBES_HOME}", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "description": ""
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "userNotice": "", 
+            "userInputs": [], 
+            "description": "Zips only the modules", 
+            "args": {
+                "artifacts": [], 
+                "cmd": "rm -f modules.zip; zip -r modules.zip modules", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "${PROBES_HOME}", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "name": "Zip just modules"
+        }
+    ], 
+    "name": "management", 
+    "variables": [
+        {
+            "singleton": true, 
+            "description": "URL who provides the modules and binaries", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "http://inedctst01:8083"
+            ], 
+            "type": "var", 
+            "name": "Probes master URL"
+        }
+    ], 
+    "myDir": "/modules", 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": "Module to manage probes application"
+}

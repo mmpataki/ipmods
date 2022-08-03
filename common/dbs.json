@@ -1,0 +1,96 @@
+{
+    "testSuite": false, 
+    "tasks": [
+        {
+            "inputs": {
+                "jdbcc_driver_classpath": "${driverPath}", 
+                "jdbcc_driver": "com.databricks.client.jdbc.Driver", 
+                "jdbcc_connection_string": "jdbc:databricks://${hostname}:443/default;transportMode=http;ssl=1;AuthMech=3;httpPath=/sql/1.0/endpoints/${orgid};", 
+                "jdbcc_user": "token", 
+                "jdbcc_password": "${token}"
+            }, 
+            "subTasks": [], 
+            "userNotice": "", 
+            "name": "connectToDatabricksJDBC42", 
+            "singleOutput": false, 
+            "userInputs": [
+                {
+                    "possibleValue": "", 
+                    "description": "path of DatabricksJDBC42.jar", 
+                    "name": "driverPath", 
+                    "title": "driver jar"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "hostname", 
+                    "name": "hostname", 
+                    "title": "hostname"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "orgid", 
+                    "name": "orgid", 
+                    "title": "orgid"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "token", 
+                    "name": "token", 
+                    "title": "token"
+                }
+            ], 
+            "description": "Connects to databricks with DatabricksJDBC42 jar", 
+            "args": {
+                "ref": "common.javax.runJdbcc", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules/common/net", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "interactive": true
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "userNotice": "", 
+            "name": "connectToOracleDatadirect", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "Connects to a oracle DB using jdbcc and datadirect jars", 
+            "args": {
+                "ref": "common.javax.runJdbcc", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules/common/net", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "interactive": false
+        }
+    ], 
+    "name": "dbs", 
+    "variables": [], 
+    "myDir": "/modules/common/net", 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": ""
+}

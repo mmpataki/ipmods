@@ -1,0 +1,45 @@
+{
+    "testSuite": true, 
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "userNotice": "", 
+            "name": "Test connect to cdgc-api.dm-em.informaticacloud.com", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "", 
+            "args": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "nc -zv cdgc-api.dm-em.informaticacloud.com 443", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "executionType": {
+                "type": "local"
+            }, 
+            "successMessage": "", 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "mitigationSteps": "White list the host cdgc-api.dm-em.informaticacloud.com for outgoing connections", 
+            "type": "testTask", 
+            "interactive": false
+        }
+    ], 
+    "name": "prereqs", 
+    "variables": [], 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": ""
+}

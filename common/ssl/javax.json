@@ -1,0 +1,64 @@
+{
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "Import SSL certificate (internal)", 
+            "userInputs": [], 
+            "args": {
+                "artifacts": [], 
+                "cmd": "${infa.isp.common.INFA_HOME}/java/bin/keytool -printcert -sslserver ${Host name}:${Port} -rfc | ${infa.isp.common.INFA_HOME}/java/bin/keytool -import -noprompt -alias ics -keystore ${trustStorePath} -storepass '${trustStorePassword}'", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "nameResolvers": [], 
+            "type": "uniTask", 
+            "description": "Imports the SSL certificate of a server into given truststore"
+        }, 
+        {
+            "inputs": {
+                "trustStorePath": "${infa.isp.common.trustStorePath}", 
+                "trustStorePassword": "${infa.isp.common.trustStorePasswordPlain}"
+            }, 
+            "subTasks": [], 
+            "name": "Import SSL certs to domain truststore", 
+            "userInputs": [
+                {
+                    "possibleValue": "", 
+                    "name": "Host name", 
+                    "description": "Host name of the server"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "name": "Port", 
+                    "description": "Port of the server (put 443 if default)"
+                }
+            ], 
+            "args": {
+                "ref": "java.ssl.common.Import SSL certificate (internal)", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "nameResolvers": [], 
+            "type": "uniTask", 
+            "description": "Imports certificates of a given server in to infa_truststore.jks (One used by domain)"
+        }
+    ], 
+    "name": "javax", 
+    "variables": [], 
+    "myDir": "/modules", 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": "module with ssl stuff."
+}

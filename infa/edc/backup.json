@@ -1,0 +1,392 @@
+{
+    "testSuite": false, 
+    "tasks": [
+        {
+            "inputs": {
+                "type": "java.util.HashMap"
+            }, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "backupJustEDC", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.edc.backup.backupEDC", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {
+                        "infa.dq.mrs.mrsName": "${infa.edc.common.mrsName}"
+                    }, 
+                    "subTasks": [], 
+                    "name": "backupMRS", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.dq.mrs.backupMRS", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "Backup MRS associated with EDC"
+                }
+            ], 
+            "name": "backupEDCPlusMRS", 
+            "userInputs": [], 
+            "args": {
+                "inputs": {}, 
+                "refs": "", 
+                "type": "refexpr"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "noopTask", 
+            "failFast": true, 
+            "description": "Does MRS + EDC backup"
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "shutdown cs", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.edc.common.Shutdown Catalog service", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {
+                        "infa.edc.ihs.ihsName": "${infa.edc.common.ihsName}"
+                    }, 
+                    "subTasks": [], 
+                    "name": "Enable ICS", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.edc.ihs.common.Start IHS", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Wait for 2 mins", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "sleep 120", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules/infa/misc/edcupgrade", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "For some reason EDC is not in a disabled state for sometime after disabling, even though the isp ping command fails. Wait for 2 mins to proceed forward."
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "backup EDC", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "./infacmd.sh ldm backupContents", 
+                        "environment": [], 
+                        "arguments": [
+                            "-dn ${infa.isp.common.domainName}", 
+                            "-un ${infa.isp.common.userName}", 
+                            "-pd ${infa.isp.common.password}", 
+                            "-sdn ${infa.isp.common.securityDomain}", 
+                            "-sn ${infa.edc.common.csName}", 
+                            "-of ${CS_BACKUP_OUTPUTDIR}/ldmbackup.zip"
+                        ], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "${infa.isp.common.INFA_HOME}/isp/bin", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }
+            ], 
+            "name": "backupEDC", 
+            "userInputs": [], 
+            "args": {
+                "ref": "", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "noopTask", 
+            "failFast": true, 
+            "description": ""
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Check whether the backup file exists", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "ls ${BACKUPFILE} | grep ldmbackup.zip", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules/infa/misc/edcupgrade", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "validateZipFile", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "unzip -t ${BACKUPFILE}", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "Validates backup zip file"
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "validate version release file", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": " unzip -l ${BACKUPFILE} | grep Informatica_info.txt", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "validate backup checkpoint  file", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "unzip -l ${BACKUPFILE} | grep bkup_checkpoint.txt", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }
+            ], 
+            "name": "validate LDM backup file", 
+            "userInputs": [
+                {
+                    "possibleValue": "", 
+                    "name": "BACKUPFILE", 
+                    "value": "/tmp/foo/ldmbackup/ldmbackup.zip", 
+                    "description": "LDM backup file path with file name"
+                }
+            ], 
+            "args": {
+                "artifacts": [], 
+                "cmd": "unzip -l ${BACKUPFILE} | grep Informatica_info.txt", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules/infa/misc/edcupgrade", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "noopTask", 
+            "failFast": true, 
+            "description": ""
+        }
+    ], 
+    "name": "backup", 
+    "variables": [], 
+    "myDir": "/modules", 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": "module to take edc backup"
+}

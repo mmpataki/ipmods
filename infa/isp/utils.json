@@ -1,0 +1,42 @@
+{
+    "testSuite": false, 
+    "tasks": [
+        {
+            "inputs": {
+                "jdbcc_driver_classpath": "${infa.isp.common.INFA_HOME}/services/shared/jars/thirdparty/*", 
+                "jdbcc_driver": "java.lang.String", 
+                "jdbcc_connection_string": "${infa.isp.common.domainDbJdbcUrl}", 
+                "jdbcc_user": "${infa.isp.common.domainDbUser}", 
+                "jdbcc_password": "${infa.isp.common.domainDbPassword}"
+            }, 
+            "subTasks": [], 
+            "userNotice": "", 
+            "name": "connectToDomainDb", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "Connects to domain db using jdbcc", 
+            "args": {
+                "ref": "common.javax.runJdbcc", 
+                "type": "ref"
+            }, 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "interactive": true
+        }
+    ], 
+    "name": "utils", 
+    "variables": [], 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": ""
+}

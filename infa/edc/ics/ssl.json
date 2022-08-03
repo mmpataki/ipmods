@@ -1,0 +1,42 @@
+{
+    "testSuite": true, 
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "Verify the purposes of the certificate", 
+            "userInputs": [], 
+            "args": {
+                "artifacts": [], 
+                "cmd": "test -z \"`openssl verify -CAfile cluster_certs/infa_pubcert.pem -purpose sslclient cluster_certs/infa_nodecertkey.pem | grep error`\" && test -z \"`openssl verify -CAfile cluster_certs/infa_pubcert.pem -purpose sslserver cluster_certs/infa_nodecertkey.pem | grep error`\"", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "${infa.edc.ics.common.certsDir}", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules/infa/edc/backup", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "mitigationSteps": "Remove the \"Netscape Cert Type\" extension while getting them signed by CA \n  - or -\nSet below flags to the extension certs while signing certs\n    SSL Client\n    SSL Server", 
+            "type": "testTask", 
+            "description": "ICS uses a set of certificates for mutual authentication, Sometimes the CA might add \"Netscape Cert Type\" extension to these certificate and may not enable both \"SSL Client\" and \"SSL Server\" flag for this extension. In these cases the servers will reject the certificates"
+        }
+    ], 
+    "name": "ssl", 
+    "variables": [], 
+    "myDir": "/modules/infa/edc/backup", 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": "Tests related to SSL on ICS"
+}

@@ -1,0 +1,325 @@
+{
+  "testSuite": false,
+  "tasks": [
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": true,
+        "cmd": "if [ ! -f $BINDIR/edc/ics/mongo ]\nthen\n   mkdir -p $BINDIR/edc/ics/mongo\n   cd $BINDIR/edc/ics/mongo\n   tar -xf $INFA_HOME/services/InfaClusterService/ServiceBinaries/Mongo/mongodb-linux-x86_64-rhel70-4.2.10.tgz\nfi\n\nif [ \"${MONGO_SCRIPT_FILE}\" !\u003d \"-\" ]; then\n   SFILE\u003d\"$TASKDIR/mongoscript_$RANDOM.sh\"\n   python $BINDIR/edc/mongoscripts/templatize.py \"${MONGO_SCRIPT_FILE}\" \"$TASKDIR/env\" \"${ingestDBName}\" \"${jobDBName}\" \u003e \"$SFILE\" 2\u003e /dev/null\nfi\n\n./mongo*/bin/mongo --quiet                                                                 \\\n    \u0027${infa.edc.utils.clusterUrl}\u0027                                                         \\\n    --tls                                                                                  \\\n    --tlsCertificateKeyFile\u003d\u0027${infa.edc.ics.utils.clusterCertsDir}/infa_nodecertkey.pem\u0027   \\\n    --tlsCAFile\u003d\u0027${infa.edc.ics.utils.clusterCertsDir}/infa_pubcert.pem\u0027                   \\\n    $SFILE\n",
+        "cwd": "",
+        "timeout": -1
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "ingestDBName": "admin",
+        "MONGO_SCRIPT_FILE": "-",
+        "jobDBName": "admin"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": true,
+      "privateTask": false,
+      "name": "mongo",
+      "description": "Runs a mongo on a given ICS instance and executes MONGO_SCRIPT_FILE if specified",
+      "myDir": "/modules/infa/edc/utils"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.utils.mongo"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "MONGO_SCRIPT_FILE": "${BINDIR}/edc/mongoscripts/increaseMongoCursorTimeout.js"
+      },
+      "userInputs": [
+        {
+          "title": "New cursor timeout",
+          "name": "cursorTimeout",
+          "description": "",
+          "possibleValue": ""
+        }
+      ],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": false,
+      "privateTask": false,
+      "name": "increaseMongoCursorTimeout",
+      "description": "Sets the mongo cursor timeout by specified value",
+      "myDir": "/modules"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.utils.mongo"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "MONGO_SCRIPT_FILE": "${BINDIR}/edc/mongoscripts/listUsers.js"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": false,
+      "privateTask": false,
+      "name": "listUsers",
+      "description": "Lists all the users in the mongodb",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": true,
+        "cmd": "echo \"Copying ${src_file}\"\necho \"${infa.edc.ics.common.gateWayHost} (gateway host)\"\necho \"  - Creating target dir\"\nssh ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost} \"mkdir -p ${target_dir}\"\necho \"  - Copying files\"\nscp -q ${src_file} ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost}:${target_dir}\n\n\nfor node in $(echo \"${infa.edc.ics.common.nomadNodes}\" | tr , \u0027 \u0027)\ndo\n  if [ \"${infa.edc.ics.common.gateWayHost}\" !\u003d \"$node\" ]; then\n    continue\n  fi\n\n  echo \"$node\"\n  echo \"  - Creating target dir\"\n  ssh ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost} \"ssh ${infa.edc.ics.common.clusterUser}@$node \u0027mkdir -p ${target_dir}\u0027\"\n  echo \"  - Copying files\"\n  ssh ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost} \"scp -q ${target_dir}/$(basename \u0027${src_file}\u0027) \u0027${infa.edc.ics.common.clusterUser}@$node:${target_dir}\u0027\"\ndone\n",
+        "cwd": "",
+        "timeout": -1
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [
+        {
+          "title": "src_file",
+          "name": "src_file",
+          "description": "source file to copy",
+          "possibleValue": ""
+        },
+        {
+          "title": "target_dir",
+          "name": "target_dir",
+          "description": "target directory",
+          "possibleValue": ""
+        }
+      ],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": true,
+      "privateTask": false,
+      "name": "copyToNomadNodes",
+      "description": "Copy a given file to all nomad nodes",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": true,
+        "cmd": "file\u003d\"/tmp/script_$RANDOM\"\necho \"# write commands in this editor (vim) and save it\" \u003e \"$file\"\nvi \"$file\"\n\necho \"Running below script on all nodes\"\ncat \"$file\"\necho \n\nfor node in $(echo \"${infa.edc.ics.common.nomadNodes}\" | tr , \u0027 \u0027)\ndo\n  echo \"Running on - $node\"\n  cat \"$file\" | ssh ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost} \"ssh ${infa.edc.ics.common.clusterUser}@$node bash -\"\ndone\n",
+        "cwd": "",
+        "timeout": -1
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": true,
+      "privateTask": false,
+      "name": "runOnAllNomadNodes",
+      "description": "Run commands on nomad nodes",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": true,
+        "cmd": "for node in $(echo \"${infa.edc.ics.common.ICS_Config/NomadServerHosts}\" | tr , \u0027 \u0027)\ndo\n  ssh -q ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost} \"ssh -q ${infa.edc.ics.common.clusterUser}@$node bash -s\" \u003c\u003c\u0027EOF\u0027\n     pid\u003d\"`ps -ef | grep -v \u0027nomad executor\u0027 | grep \u0027[\u003d]${resourceName}_\u0027 | awk \u0027{print $2}\u0027`\"\n     echo \"$pid\"\n     if [ \"$pid\" !\u003d \"\" ]; then\n       echo \"scanner running on `hostname -f`\"\n       ${infa.edc.ics.common.clusterCustomDir}/java/bin/jstack -l $pid\n     fi\nEOF\ndone",
+        "cwd": "",
+        "timeout": 0
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [
+        {
+          "title": "resourceName",
+          "name": "resourceName",
+          "description": "Resource name",
+          "possibleValue": "",
+          "value": ""
+        }
+      ],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": true,
+      "privateTask": false,
+      "name": "sjstack",
+      "description": "",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests",
+      "label": ""
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.utils.mongo"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "MONGO_SCRIPT_FILE": "${BINDIR}/edc/mongoscripts/currentOp.js"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": false,
+      "privateTask": false,
+      "name": "mongoCurrentOps",
+      "description": "Lists out the current mongo operations",
+      "myDir": "/root/probes/modules/infa/edc/ics/common",
+      "label": ""
+    }
+  ],
+  "conditions": [],
+  "nameResolvers": [
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "hosts\u003d\"$(echo \u0027${infa.edc.ics.common.ICS_Config/MongoHosts}\u0027 | sed \u0027s/,/:${infa.edc.ics.common.mongoPort},/g\u0027)\"\necho \"url\u003dmongodb://$hosts/?authMechanism\u003dMONGODB-X509\u0026ssl\u003dtrue\u0026authSource\u003d\\$external\u0026replicaSet\u003dicsRs0\"\n",
+        "cwd": "",
+        "timeout": 0
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "clusterUrlComputer",
+      "description": "",
+      "myDir": "/root/probes/modules/infa/isp/common",
+      "label": ""
+    }
+  ],
+  "variables": [
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.isp.common.INFA_KEYSTORE}/${infa.edc.ics.common.icsName}/cluster_certs"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "clusterCertsDir",
+      "description": "",
+      "myDir": "/modules/infa/edc/utils"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.utils.clusterUrlComputer/url}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "clusterUrl",
+      "description": "",
+      "myDir": "/modules/infa/edc/common"
+    }
+  ],
+  "name": "utils",
+  "description": "EDC utilities",
+  "myDir": "/modules"
+}

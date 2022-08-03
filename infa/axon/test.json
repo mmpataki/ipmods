@@ -1,0 +1,11 @@
+{
+  "testSuite": false,
+  "tasks": [],
+  "conditions": [],
+  "nameResolvers": [],
+  "variables": [],
+  "name": "AxonTest",
+  "description": "Testing Utility for Axon",
+  "myDir": "/root/probes/modules/infa/edc/ics/prereqtests",
+  "label": ""
+}

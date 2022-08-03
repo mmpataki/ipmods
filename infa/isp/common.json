@@ -1,0 +1,1223 @@
+{
+    "testSuite": false, 
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [
+                        {
+                            "inputs": {}, 
+                            "subTasks": [], 
+                            "name": "run shutdown command", 
+                            "singleOutput": false, 
+                            "userInputs": [], 
+                            "description": "", 
+                            "args": {
+                                "inheritIo": false, 
+                                "artifacts": [], 
+                                "cmd": "./infaservice.sh shutdown", 
+                                "environment": [], 
+                                "arguments": [], 
+                                "mergeStreams": false, 
+                                "type": "cmd", 
+                                "cwd": "${infa.isp.common.INFA_HOME}/tomcat/bin", 
+                                "captureOutputs": false
+                            }, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "nameResolvers": [], 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "uniTask", 
+                            "interactive": false
+                        }, 
+                        {
+                            "inputs": {}, 
+                            "args": {
+                                "ref": "infa.isp.common.Ping domain", 
+                                "type": "ref"
+                            }, 
+                            "subTasks": [], 
+                            "name": "Wait for shutdown", 
+                            "singleOutput": false, 
+                            "userInputs": [], 
+                            "description": "", 
+                            "interval": 3000, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "loopTillFails": true, 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "pollTask", 
+                            "nameResolvers": [], 
+                            "interactive": false
+                        }
+                    ], 
+                    "name": "shutdown and wait for it to go down", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "", 
+                    "args": {
+                        "ref": "", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "noopTask", 
+                    "failFast": true, 
+                    "interactive": false
+                }
+            ], 
+            "name": "Shutdown domain", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "Checks if domain is up, shuts it down if it's and waits for all services to go down", 
+            "args": {
+                "ref": "infa.isp.common.Ping domain", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "conditionTask", 
+            "interactive": false
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Shut down a domain", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "", 
+                    "args": {
+                        "ref": "infa.isp.common.Shutdown domain", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "interactive": false
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "backup domain", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "run the command", 
+                    "args": {
+                        "inheritIo": false, 
+                        "artifacts": [], 
+                        "cmd": "./infasetup.sh", 
+                        "environment": [], 
+                        "arguments": [
+                            "backupDomain", 
+                            "-da", 
+                            "${infa.isp.common.domainDbHost}:${infa.isp.common.domainDbPort}", 
+                            "-du", 
+                            "${infa.isp.common.domainDbUser}", 
+                            "-dp", 
+                            "${infa.isp.common.domainDbPassword}", 
+                            "-dt", 
+                            "${infa.isp.common.domainDbType}", 
+                            "-ds", 
+                            "${infa.isp.common.domainDbServiceName}", 
+                            "-bf", 
+                            "${DOMAIN_BACKUP_DIR}/domainBackup", 
+                            "-dn", 
+                            "${infa.isp.common.domainName}"
+                        ], 
+                        "mergeStreams": true, 
+                        "type": "cmd", 
+                        "cwd": "${infa.isp.common.INFA_HOME}/isp/bin", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "interactive": false
+                }
+            ], 
+            "name": "Backup Domain", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "Shuts down a domain and takes it backup", 
+            "args": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "noopTask", 
+            "failFast": true, 
+            "interactive": false
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "do nothing", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "", 
+                    "args": {
+                        "ref": "", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "noopTask", 
+                    "failFast": true, 
+                    "interactive": false
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [
+                        {
+                            "inputs": {}, 
+                            "subTasks": [], 
+                            "name": "start domain", 
+                            "singleOutput": false, 
+                            "userInputs": [], 
+                            "description": "", 
+                            "args": {
+                                "inheritIo": false, 
+                                "artifacts": [], 
+                                "cmd": "./infaservice.sh startup", 
+                                "environment": [
+                                    "${infa.isp.common.INFA_TRUSTSTORE_PASSWORD}", 
+                                    "${infa.isp.common.INFA_TRUSTSTORE}"
+                                ], 
+                                "arguments": [], 
+                                "mergeStreams": false, 
+                                "type": "cmd", 
+                                "cwd": "${infa.isp.common.INFA_HOME}/tomcat/bin", 
+                                "captureOutputs": false
+                            }, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "nameResolvers": [], 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "uniTask", 
+                            "interactive": false
+                        }, 
+                        {
+                            "inputs": {}, 
+                            "args": {
+                                "ref": "infa.isp.common.Ping domain", 
+                                "type": "ref"
+                            }, 
+                            "subTasks": [], 
+                            "name": "wait for it to come up", 
+                            "singleOutput": false, 
+                            "userInputs": [], 
+                            "description": "", 
+                            "interval": 3000, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "loopTillFails": false, 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "pollTask", 
+                            "nameResolvers": [], 
+                            "interactive": false
+                        }
+                    ], 
+                    "name": "start domain and wait for it to come up", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "", 
+                    "args": {
+                        "ref": "", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "noopTask", 
+                    "failFast": true, 
+                    "interactive": false
+                }
+            ], 
+            "name": "Start domain", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "Starts a domain if not running", 
+            "args": {
+                "ref": "infa.isp.common.Ping domain", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "conditionTask", 
+            "interactive": false
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "Run infacmd", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "Runs the infacmd correctly, with the environment needed.", 
+            "args": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "./infacmd.sh ${PLUGIN} ${PLUGIN_COMMAND}", 
+                "environment": [
+                    "${infa.isp.common.INFA_TRUSTSTORE}", 
+                    "${infa.isp.common.INFA_TRUSTSTORE_PASSWORD}"
+                ], 
+                "arguments": [
+                    "-dn \"${infa.isp.common.domainName}\"", 
+                    "-un \"${infa.isp.common.userName}\"", 
+                    "-pd \"${infa.isp.common.password}\"", 
+                    "-sdn \"${infa.isp.common.securityDomain}\"", 
+                    "${PLUGIN_ARGUMENTS}"
+                ], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "${infa.isp.common.INFA_HOME}/isp/bin", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "interactive": false
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [
+                        {
+                            "inputs": {
+                                "PLUGIN_ARGUMENTS": "-sn \"${SERVICE_NAME}\" -mo ABORT", 
+                                "PLUGIN_COMMAND": "disableService", 
+                                "PLUGIN": "isp"
+                            }, 
+                            "subTasks": [], 
+                            "name": "Stop the service", 
+                            "singleOutput": false, 
+                            "userInputs": [], 
+                            "description": "", 
+                            "args": {
+                                "ref": "infa.isp.common.Run infacmd", 
+                                "type": "ref"
+                            }, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "nameResolvers": [], 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "uniTask", 
+                            "interactive": false
+                        }, 
+                        {
+                            "inputs": {}, 
+                            "args": {
+                                "ref": "infa.isp.common.Ping service", 
+                                "type": "ref"
+                            }, 
+                            "subTasks": [], 
+                            "name": "Wait for it to shut down", 
+                            "singleOutput": false, 
+                            "userInputs": [], 
+                            "description": "", 
+                            "interval": 3000, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "loopTillFails": true, 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "pollTask", 
+                            "nameResolvers": [], 
+                            "interactive": false
+                        }
+                    ], 
+                    "name": "Stop the service and wait for it to go down", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "", 
+                    "args": {
+                        "ref": "", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "noopTask", 
+                    "failFast": true, 
+                    "interactive": false
+                }
+            ], 
+            "name": "Stop a service", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "Stops a service in domain if running", 
+            "args": {
+                "ref": "infa.isp.common.Ping service", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "conditionTask", 
+            "interactive": false
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "do nothing", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "service is up, do nothing", 
+                    "args": {
+                        "ref": "", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "noopTask", 
+                    "failFast": true, 
+                    "interactive": false
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [
+                        {
+                            "inputs": {
+                                "PLUGIN_ARGUMENTS": "-sn \"${SERVICE_NAME}\"", 
+                                "PLUGIN_COMMAND": "enableService", 
+                                "PLUGIN": "isp"
+                            }, 
+                            "subTasks": [], 
+                            "name": "Start the service", 
+                            "singleOutput": false, 
+                            "userInputs": [], 
+                            "description": "", 
+                            "args": {
+                                "ref": "infa.isp.common.Run infacmd", 
+                                "type": "ref"
+                            }, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "nameResolvers": [], 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "uniTask", 
+                            "interactive": false
+                        }, 
+                        {
+                            "inputs": {}, 
+                            "args": {
+                                "ref": "infa.isp.common.Ping service", 
+                                "type": "ref"
+                            }, 
+                            "subTasks": [], 
+                            "name": "Wait for it to come up", 
+                            "singleOutput": false, 
+                            "userInputs": [], 
+                            "description": "", 
+                            "interval": 0, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "loopTillFails": false, 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "pollTask", 
+                            "nameResolvers": [], 
+                            "interactive": false
+                        }
+                    ], 
+                    "name": "Start the service and wait for it to come up", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "", 
+                    "args": {
+                        "ref": "", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "noopTask", 
+                    "failFast": true, 
+                    "interactive": false
+                }
+            ], 
+            "name": "Start a service", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "Starts a service in domain if not running", 
+            "args": {
+                "ref": "infa.isp.common.Ping service", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "conditionTask", 
+            "interactive": false
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "Ping domain", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "", 
+            "args": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "./infacmd.sh isp ping", 
+                "environment": [
+                    "${infa.isp.common.INFA_TRUSTSTORE}", 
+                    "${infa.isp.common.INFA_TRUSTSTORE_PASSWORD}"
+                ], 
+                "arguments": [
+                    "-dn ${infa.isp.common.domainName}"
+                ], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "${infa.isp.common.INFA_HOME}/isp/bin", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "interactive": false
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "Ping service", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "", 
+            "args": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "./infacmd.sh isp ping", 
+                "environment": [], 
+                "arguments": [
+                    "-dn \"${infa.isp.common.domainName}\"", 
+                    "-sn ${SERVICE_NAME}"
+                ], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "${infa.isp.common.INFA_HOME}/isp/bin", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "interactive": false
+        }, 
+        {
+            "inputs": {
+                "PLUGIN_ARGUMENTS": "-eu ${infa.isp.common.userName}", 
+                "PLUGIN_COMMAND": "listUserPermissions", 
+                "PLUGIN": "isp"
+            }, 
+            "subTasks": [], 
+            "userNotice": "", 
+            "name": "Authenticate", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "Authenticates the user", 
+            "args": {
+                "ref": "infa.isp.common.Run infacmd", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "successMessage": "Credentials are correct", 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "mitigationSteps": "Please input correct credentials", 
+            "type": "testTask", 
+            "interactive": false
+        }
+    ], 
+    "name": "common", 
+    "variables": [
+        {
+            "singleton": false, 
+            "name": "INFA_HOME", 
+            "myDir": "/modules", 
+            "delimiter": ",", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.Infa home finder/INFA_HOME}", 
+                "${INFA_HOME}"
+            ], 
+            "type": "var", 
+            "description": "INFA_HOME environment variable"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Name of the informatica domain", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.nodemeta_xml/imx:IMX.domainservice:GatewayNodeConfig.domainName}"
+            ], 
+            "type": "var", 
+            "name": "domainName"
+        }, 
+        {
+            "singleton": true, 
+            "description": "dbport picked from nodemeta.xml", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.nodemeta_xml/imx:IMX.domainservice:DBConnectivity.dbPort}"
+            ], 
+            "type": "var", 
+            "name": "domainDbPort"
+        }, 
+        {
+            "singleton": true, 
+            "description": "", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.nodemeta_xml/imx:IMX.domainservice:DBConnectivity.dbUsername}"
+            ], 
+            "type": "var", 
+            "name": "domainDbUser"
+        }, 
+        {
+            "singleton": true, 
+            "description": "", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.nodemeta_xml/imx:IMX.domainservice:DBConnectivity.dbType}"
+            ], 
+            "type": "var", 
+            "name": "domainDbType"
+        }, 
+        {
+            "singleton": true, 
+            "description": "", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.domainDbPasswordProvider/dbPassword}"
+            ], 
+            "type": "var", 
+            "name": "domainDbPassword"
+        }, 
+        {
+            "singleton": true, 
+            "description": "", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.nodemeta_xml/imx:IMX.domainservice:DBConnectivity.dbHost}"
+            ], 
+            "type": "var", 
+            "name": "domainDbHost"
+        }, 
+        {
+            "singleton": true, 
+            "description": "", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.nodemeta_xml/imx:IMX.domainservice:DBConnectivity.dbName}"
+            ], 
+            "type": "var", 
+            "name": "domainDbServiceName"
+        }, 
+        {
+            "singleton": true, 
+            "description": "", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.nodemeta_xml/imx:IMX.domainservice:GatewayNodeConfig.securityConfig.secretKeysDirectory}"
+            ], 
+            "type": "var", 
+            "name": "siteKeyDir"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Domain username, this exists here just to make the tool prompt for username. Notice the value its' ${foo/Domain login user name} which will make tool fall back to user input resolver", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${foo/Domain login user name}"
+            ], 
+            "type": "var", 
+            "name": "userName"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Domain password, this exists here just to make the tool prompt for password. Notice the value its' ${foo/Domain login password} which will make tool fall back to user input resolver", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${foo/Domain login password}"
+            ], 
+            "type": "var", 
+            "name": "password"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Security domain of user logging in, Defined here to uniformity + forcing user input resolver", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${foo/Security Domain}"
+            ], 
+            "type": "var", 
+            "name": "securityDomain"
+        }, 
+        {
+            "singleton": true, 
+            "name": "INFA_TRUSTSTORE_PASSWORD", 
+            "myDir": "/modules", 
+            "delimiter": ",", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.trustStoreDetails/trustStorePassword}"
+            ], 
+            "type": "var", 
+            "description": "Encrypted infa truststore password"
+        }, 
+        {
+            "singleton": true, 
+            "name": "INFA_TRUSTSTORE", 
+            "myDir": "/modules", 
+            "delimiter": ",", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.trustStoreDetails/trustStoreDir}"
+            ], 
+            "type": "var", 
+            "description": "Directory of the infa truststore file. Useful to set as environment variable"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Name of the node which is installed at INFA_HOME", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.nodemeta_xml/imx:IMX.domainservice:GatewayNodeConfig.nodeName}"
+            ], 
+            "type": "var", 
+            "name": "nodeName"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Infa keystore variable", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.trustStoreDetails/keyStoreDir}"
+            ], 
+            "type": "var", 
+            "name": "INFA_KEYSTORE"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Infa keystore password", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.trustStoreDetails/keyStorePassword}"
+            ], 
+            "type": "var", 
+            "name": "INFA_KEYSTORE_PASSWORD"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Path to keystore file. Note that this is the file path and not a directory path", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.trustStoreDetails/keyStore}"
+            ], 
+            "type": "var", 
+            "name": "keyStorePath"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Path to truststore file. Note that this is the file path and not a directory path", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.trustStoreDetails/trustStore}"
+            ], 
+            "type": "var", 
+            "name": "trustStorePath"
+        }, 
+        {
+            "singleton": true, 
+            "description": "true / false", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.infaCmdDomainOptions/TLSMode}"
+            ], 
+            "type": "var", 
+            "name": "isDomainSSL"
+        }, 
+        {
+            "singleton": true, 
+            "name": "trustStorePasswordPlain", 
+            "myDir": "/modules", 
+            "delimiter": ",", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.trustStoreDetails/trustStorePasswordPlain}"
+            ], 
+            "type": "var", 
+            "description": "infa trustStorePassword in plain text."
+        }, 
+        {
+            "singleton": true, 
+            "name": "keyStorePasswordPlain", 
+            "myDir": "/modules", 
+            "delimiter": ",", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.trustStoreDetails/keyStorePasswordPlain}"
+            ], 
+            "type": "var", 
+            "description": "infa keyStorePassword in plain text."
+        }, 
+        {
+            "singleton": true, 
+            "name": "domainDbJdbcUrl", 
+            "delimiter": "", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.domainDbJdbcUrlProvider/URL}"
+            ], 
+            "type": "var", 
+            "description": ""
+        }, 
+        {
+            "singleton": true, 
+            "name": "domainDbName", 
+            "delimiter": "", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.isp.common.nodemeta_xml/imx:IMX.domainservice:DBConnectivity.dbName}"
+            ], 
+            "type": "var", 
+            "description": "domain db name (sqlserver)"
+        }
+    ], 
+    "myDir": "/modules", 
+    "nameResolvers": [
+        {
+            "decodeValues": true, 
+            "name": "nodemeta_xml", 
+            "fileType": "xml", 
+            "myDir": "/modules", 
+            "fileName": "${infa.isp.common.INFA_HOME}/isp/config/nodemeta.xml", 
+            "nameResolvers": [], 
+            "props": {}, 
+            "type": "fileBasedNr", 
+            "description": "Reads nodemeta.xml and provides values from it"
+        }, 
+        {
+            "description": "Reads the DB password from nodemeta.xml and decrypts it.", 
+            "cmd": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "bash -x", 
+                "environment": [
+                    "INFA_HOME=${infa.isp.common.INFA_HOME}"
+                ], 
+                "arguments": [
+                    "./run.sh", 
+                    "${infa.isp.common.nodemeta_xml/imx:IMX.domainservice:DBConnectivity.dbEncryptedPassword}", 
+                    "${infa.isp.common.siteKeyDir} |  grep output | awk -F '[' '{print $2}' | awk -F ']' '{print $1}'  | xargs printf \"dbPassword=%s\""
+                ], 
+                "mergeStreams": false, 
+                "cwd": "$BINDIR/isp/infadecrypt", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "nameResolvers": [], 
+            "props": {}, 
+            "type": "cmdNr", 
+            "name": "domainDbPasswordProvider"
+        }, 
+        {
+            "description": "A resolver which figures out the truststore details of the node using the jinfo on node process", 
+            "cmd": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "./extract.sh", 
+                "environment": [
+                    "${infa.isp.common.INFA_HOME}"
+                ], 
+                "arguments": [
+                    "${infa.isp.common.nodeName}"
+                ], 
+                "mergeStreams": true, 
+                "cwd": "${BINDIR}/isp/truststoredetails", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "nameResolvers": [], 
+            "props": {}, 
+            "type": "cmdNr", 
+            "name": "trustStoreDetails"
+        }, 
+        {
+            "description": "Runs infacmd to run domain options command to figure out whether the domain options", 
+            "cmd": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "./infacmd.sh listDomainOptions ", 
+                "environment": [], 
+                "arguments": [
+                    "-dn ${infa.isp.common.domainName}", 
+                    "-un ${infa.isp.common.userName}", 
+                    "-pd ${infa.isp.common.password}", 
+                    "-sdn ${infa.isp.common.securityDomain}"
+                ], 
+                "mergeStreams": false, 
+                "cwd": "${infa.isp.common.INFA_HOME}/isp/bin", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "nameResolvers": [], 
+            "props": {}, 
+            "type": "cmdNr", 
+            "name": "infaCmdDomainOptions"
+        }, 
+        {
+            "description": "Runs a ps command to figure out a node process and then possible infa home", 
+            "cmd": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "if [ \"$INFA_HOME\" != \"\" ]\nthen\n    echo \"INFA_HOME=$INFA_HOME\"\n    exit 0\nfi\nhome=`ps -ef|grep I[S]P|awk '{print $8}'|xargs dirname|xargs dirname|xargs dirname|sort|uniq|tr '\\n' ','|sed 's/.$//'`\nif [ \"$home\" != \"\" ]\nthen \n    echo \"INFA_HOME=$home\"\nfi", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules/infa/isp/common", 
+            "nameResolvers": [], 
+            "props": {}, 
+            "type": "cmdNr", 
+            "name": "Infa home finder"
+        }, 
+        {
+            "description": "Resolves names using the table_name, column_name from domain db", 
+            "cmd": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "${infa.isp.common.INFA_HOME}/java/bin/java -cp \"${BINDIR}/java/jdbc/\" JDBCTool", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules/infa/isp/common", 
+            "nameResolvers": [], 
+            "props": {}, 
+            "type": "cmdNr", 
+            "name": "securityDomainProvider"
+        }, 
+        {
+            "description": "", 
+            "cmd": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "type=\"${infa.isp.common.domainDbType}\"\ncase $type in\n  \"MSSQLSERVER\")\n     type=\"sqlserver\"\n     opts=\";DatabaseName=${infa.isp.common.domainDbName}\"\n     ;;\n  \"ORACLE\")\n     type=\"oracle\"\n     opts=\";ServiceName=${infa.isp.common.domainDbServiceName}\"\n     ;;\nesac\necho \"URL=jdbc:informatica:$type://${infa.isp.common.domainDbHost}:${infa.isp.common.domainDbPort}$opts\"", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "nameResolvers": [], 
+            "props": {}, 
+            "type": "cmdNr", 
+            "name": "domainDbJdbcUrlProvider"
+        }
+    ], 
+    "conditions": [
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "isDomainUp", 
+            "singleOutput": false, 
+            "userInputs": [], 
+            "description": "Returns true if domain is up and running", 
+            "args": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "interactive": false
+        }
+    ], 
+    "description": "Common Informatica domain variables and tasks"
+}

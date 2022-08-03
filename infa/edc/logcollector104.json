@@ -1,0 +1,165 @@
+{
+    "testSuite": false, 
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [
+                        {
+                            "inputs": {}, 
+                            "subTasks": [
+                                {
+                                    "inputs": {
+                                        "CS_LOGS_DIR": "${WORKDIR}/CatalogService"
+                                    }, 
+                                    "subTasks": [], 
+                                    "userNotice": "", 
+                                    "userInputs": [], 
+                                    "description": "", 
+                                    "args": {
+                                        "ref": "infa.edc.logcollector104.Collect the logs in the catalog service logs directory", 
+                                        "type": "ref"
+                                    }, 
+                                    "myDir": "/modules/infa/misc/edcupgrade", 
+                                    "executionType": {
+                                        "type": "local"
+                                    }, 
+                                    "failureHandlingStrategy": {
+                                        "type": "noOpFailureHandlerStrategy"
+                                    }, 
+                                    "nameResolvers": [], 
+                                    "retryStrategy": {
+                                        "retry": 0, 
+                                        "type": "noRetryStrategy"
+                                    }, 
+                                    "type": "uniTask", 
+                                    "name": "collect logs from service logs directory"
+                                }
+                            ], 
+                            "userNotice": "", 
+                            "userInputs": [], 
+                            "description": "", 
+                            "args": {
+                                "inputs": {}, 
+                                "refs": "", 
+                                "type": "refexpr"
+                            }, 
+                            "myDir": "/modules/infa/misc/edcupgrade", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "nameResolvers": [], 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "noopTask", 
+                            "failFast": false, 
+                            "name": "collect logs for \"Catalog service startup issue\""
+                        }
+                    ], 
+                    "userNotice": "", 
+                    "userInputs": [], 
+                    "description": "", 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "test \"${collectOption}\" = \"Catalog service startup issue\"", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules/infa/misc/edcupgrade", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "conditionText": "scenario is \"Catalog service startup issue\"", 
+                    "type": "conditionTask", 
+                    "name": "Catalog service startup issue"
+                }
+            ], 
+            "userNotice": "", 
+            "userInputs": [
+                {
+                    "possibleValue": "", 
+                    "description": "", 
+                    "name": "", 
+                    "title": ""
+                }
+            ], 
+            "description": "Collect scenario based EDC logs", 
+            "args": {
+                "inputs": {}, 
+                "refs": "", 
+                "type": "refexpr"
+            }, 
+            "myDir": "/modules/infa/misc/edcupgrade", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "noopTask", 
+            "failFast": false, 
+            "name": "Collect logs"
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "userNotice": "", 
+            "userInputs": [], 
+            "description": "Copies the content of the catalog service logs directory ", 
+            "args": {
+                "artifacts": [], 
+                "cmd": "cp /tmp/foo/ ${CS_LOGS_DIR}", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules/infa/misc/edcupgrade", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "uniTask", 
+            "name": "Collect the logs in the catalog service logs directory"
+        }
+    ], 
+    "name": "logcollector104", 
+    "variables": [], 
+    "myDir": "/modules/infa/misc/edcupgrade", 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": "10.4 log collector implementation"
+}

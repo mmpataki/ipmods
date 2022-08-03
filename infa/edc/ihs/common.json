@@ -1,0 +1,71 @@
+{
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [], 
+            "name": "cleanCluster", 
+            "userInputs": [], 
+            "args": {
+                "artifacts": [], 
+                "cmd": "./infacmd.sh ihs cleanCluster", 
+                "environment": [], 
+                "arguments": [
+                    "-dn \"${infa.isp.common.domainName}\"", 
+                    "-un \"${infa.isp.common.userName}\"", 
+                    "-pd \"${infa.isp.common.password}\"", 
+                    "-sdn \"${infa.isp.common.securityDomain}\"", 
+                    "-sn \"${ICS_NAME}\""
+                ], 
+                "mergeStreams": true, 
+                "type": "cmd", 
+                "cwd": "${infa.isp.common.INFA_HOME}/isp/bin", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "nameResolvers": [], 
+            "type": "uniTask", 
+            "description": "Cleans the cluster service"
+        }, 
+        {
+            "inputs": {
+                "SERVICE_NAME": "${infa.edc.ihs.ihsName}"
+            }, 
+            "subTasks": [], 
+            "name": "Start IHS", 
+            "userInputs": [], 
+            "args": {
+                "type": "ref", 
+                "ref": "infa.isp.common.Start a service"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "nameResolvers": [], 
+            "type": "uniTask", 
+            "description": ""
+        }
+    ], 
+    "name": "common", 
+    "variables": [
+        {
+            "singleton": true, 
+            "name": "ihsName", 
+            "myDir": "/modules", 
+            "nameResolvers": [], 
+            "multiValued": false, 
+            "possibleValues": [
+                "${foo/IHS_NAME}"
+            ], 
+            "type": "var", 
+            "description": "IHS service name. Filled in by user"
+        }
+    ], 
+    "myDir": "/modules", 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": "ihs common module"
+}

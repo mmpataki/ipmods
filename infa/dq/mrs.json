@@ -1,0 +1,117 @@
+{
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Start MRS if not started", 
+                    "userInputs": [], 
+                    "args": {
+                        "type": "ref", 
+                        "ref": "infa.dq.mrs.Start MRS"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "nameResolvers": [], 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {
+                        "PLUGIN_ARGUMENTS": "-sn ${infa.dq.mrs.mrsName} -of ${MRS_BACKUP_FILE_PATH} ", 
+                        "PLUGIN_COMMAND": "backupContents", 
+                        "PLUGIN": "mrs"
+                    }, 
+                    "subTasks": [], 
+                    "name": "Run the backup command", 
+                    "userInputs": [], 
+                    "args": {
+                        "type": "ref", 
+                        "ref": "infa.isp.common.Run infacmd"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "nameResolvers": [], 
+                    "type": "uniTask", 
+                    "description": ""
+                }
+            ], 
+            "name": "backupMRS", 
+            "userInputs": [], 
+            "args": {
+                "type": "ref", 
+                "ref": ""
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "nameResolvers": [], 
+            "type": "noopTask", 
+            "description": "Backup MRS"
+        }, 
+        {
+            "inputs": {
+                "SERVICE_NAME": "${infa.dq.mrs.mrsName}"
+            }, 
+            "subTasks": [], 
+            "name": "Start MRS", 
+            "userInputs": [], 
+            "args": {
+                "type": "ref", 
+                "ref": "infa.isp.common.Start a service"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "nameResolvers": [], 
+            "type": "uniTask", 
+            "description": "Starts a MRS "
+        }
+    ], 
+    "name": "mrs", 
+    "variables": [
+        {
+            "singleton": false, 
+            "name": "mrsName", 
+            "myDir": "/modules", 
+            "delimiter": ",", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${infa.dq.mrs.MRS Service lister/SERVICES}", 
+                "${foo/MRS_NAME}"
+            ], 
+            "type": "var", 
+            "description": "Name of the MRS. Just a standard variable whose values come in from user input / name resolver"
+        }
+    ], 
+    "myDir": "/modules", 
+    "nameResolvers": [
+        {
+            "description": "Lists MRS services in a domain", 
+            "cmd": {
+                "artifacts": [], 
+                "cmd": "./infacmd.sh isp listServices -dn ${infa.isp.common.domainName} -un ${infa.isp.common.userName} -pd ${infa.isp.common.password} -st MRS|grep -v 'Command ran successfully'|sort|uniq|tr '\\n' ',' |sed 's/.$//'|xargs printf \"SERVICES=%s\"", 
+                "environment": [], 
+                "arguments": [], 
+                "mergeStreams": false, 
+                "cwd": "${infa.isp.common.INFA_HOME}/isp/bin", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules", 
+            "nameResolvers": [], 
+            "props": {}, 
+            "type": "cmdNr", 
+            "name": "MRS Service lister"
+        }
+    ], 
+    "conditions": [], 
+    "description": "Module for MRS maintainance"
+}

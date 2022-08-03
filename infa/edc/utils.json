@@ -1,0 +1,585 @@
+{
+  "testSuite": false,
+  "tasks": [
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.utils.mongo"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "ingestDBName": "${infa.edc.utils.ingestDBName}",
+        "MONGO_SCRIPT_FILE": "/data/informatica/1050/logs/n_04_Kathjori/services/CatalogService/EDC_Mahanadi/test.sh",
+        "jobDBName": "${infa.edc.utils.jobDBName}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": true,
+      "name": "RunMongoScript",
+      "description": "Runs a mongo script on a given EDC instance",
+      "myDir": "/modules/infa/edc/utils"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.utils.RunMongoScript"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "MONGO_SCRIPT_FILE": "${BINDIR}/edc/mongoscripts/listJobs.js"
+      },
+      "userInputs": [
+        {
+          "title": "Resource name",
+          "name": "resourceName",
+          "description": "Name of the resource of which you want to list the jobs",
+          "possibleValue": "",
+          "value": "PLATFORM_RESOURCE"
+        }
+      ],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": false,
+      "privateTask": false,
+      "name": "findJobsOfAResource",
+      "description": "Finds jobs for a resource",
+      "myDir": "/modules"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.utils.RunMongoScript"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "MONGO_SCRIPT_FILE": "${BINDIR}/edc/mongoscripts/releaseResourceLocks.js"
+      },
+      "userInputs": [
+        {
+          "title": "Resource name",
+          "name": "resourceName",
+          "description": "",
+          "possibleValue": "",
+          "value": "PLATFORM_RESOURCE"
+        }
+      ],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": false,
+      "privateTask": false,
+      "name": "releaseResourceLock",
+      "description": "Release locks on a resource.",
+      "myDir": "/modules"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.utils.RunMongoScript"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "MONGO_SCRIPT_FILE": "${BINDIR}/edc/mongoscripts/findTasksCount.js"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": false,
+      "privateTask": false,
+      "name": "findTasksCount",
+      "description": "(Unwinds and) find the tasks count in the Job collection",
+      "myDir": "/modules"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.utils.RunMongoScript"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "MONGO_SCRIPT_FILE": "${BINDIR}/edc/mongoscripts/updateJobStateToCancelled.js"
+      },
+      "userInputs": [
+        {
+          "title": "Resource name",
+          "name": "resourceName",
+          "description": "",
+          "possibleValue": "",
+          "value": "PLATFORM_RESOURCE"
+        }
+      ],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": false,
+      "privateTask": false,
+      "name": "updateJobStateToCancelled",
+      "description": "Sets the job state to cancelled for a given resource where the status is one of\n  - RUNNING\n  - NOT_SUBMITTED\n  - QUEUED\n  - PAUSED",
+      "myDir": "/modules"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.utils.RunMongoScript"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "MONGO_SCRIPT_FILE": "${BINDIR}/edc/mongoscripts/treeFiles.js"
+      },
+      "userInputs": [
+        {
+          "title": "Resource name",
+          "name": "resourceName",
+          "description": "",
+          "possibleValue": "",
+          "value": "ADLS_DoT_Test"
+        }
+      ],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": false,
+      "privateTask": false,
+      "name": "treeFiles",
+      "description": "Lists the content files of a resource in a tree format",
+      "myDir": "/modules"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "common.javax.attachIa4j"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "pid": "${infa.edc.common.csPid}"
+      },
+      "userInputs": [
+        {
+          "title": "csName",
+          "name": "infa.edc.common.csName",
+          "description": "Catalog service name",
+          "possibleValue": "${infa.edc.common.csName}"
+        },
+        {
+          "title": "ia4j_config",
+          "name": "ia4j_config",
+          "description": "Ia4j config file",
+          "possibleValue": ""
+        }
+      ],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": true,
+      "privateTask": false,
+      "name": "attachIa4jToCs",
+      "description": "Attaches ia4j to catalog service",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "noopTask",
+      "runParallel": false,
+      "failFast": true,
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "",
+        "cwd": "",
+        "timeout": -1
+      },
+      "subTasks": [
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "ref",
+            "ref": "infa.edc.ics.utils.copyToNomadNodes"
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {
+            "src_file": "${infa.isp.common.INFA_HOME}/tools/debugtools/ia4j/ia4j.jar",
+            "infa.edc.common.csName": "${csName}",
+            "target_dir": "${output_dir}"
+          },
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": true,
+          "privateTask": false,
+          "name": "copy ia4j jar",
+          "description": "copy ia4j.jar nomad nodes",
+          "myDir": "/modules/infa/edc/common"
+        },
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "cmd",
+            "captureOutputs": false,
+            "artifacts": [],
+            "arguments": [],
+            "environment": [],
+            "mergeStreams": false,
+            "inheritIo": false,
+            "cmd": "prfx\u003d$(echo \u0027${output_dir}\u0027 | sed \u0027s/\\//\\\\\\//g\u0027)\nsed -i \"s/ia4j.traceFilePrefix\u003d.*/ia4j.traceFilePrefix\u003d$prfx\\/ia4j_out/g\" ${ia4j_config}",
+            "cwd": "",
+            "timeout": -1
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "normalize ia4j config",
+          "description": "sets the output dir to the output dir and sets name to ia4j.props",
+          "myDir": "/modules/infa/edc/common"
+        },
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "ref",
+            "ref": "infa.edc.ics.utils.copyToNomadNodes"
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {
+            "src_file": "${ia4j_config}",
+            "infa.edc.common.csName": "${csName}",
+            "target_dir": "${output_dir}"
+          },
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": true,
+          "privateTask": false,
+          "name": "copy ia4j props file",
+          "description": "copy ia4j.props nomad nodes",
+          "myDir": "/modules/infa/edc/common"
+        },
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "ref",
+            "ref": "infa.isp.common.Run infacmd"
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {
+            "infa.isp.common.securityDomain": "${securityDomain}",
+            "infa.isp.common.userName": "${userName}",
+            "PLUGIN_COMMAND": "updateServiceOptions",
+            "PLUGIN_ARGUMENTS": "-sn ${csName} -o \"LdmCustomOptions.orchestration.nomad.exec.additional.jvm.flags\u003d-Xverify:none -Xbootclasspath/a:${output_dir}/ia4j.jar -javaagent:${output_dir}/ia4j.jar\u003dconfigFile\u003d${output_dir}/ia4j.props\"",
+            "PLUGIN": "ldm",
+            "infa.isp.common.password": "${password}"
+          },
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": true,
+          "privateTask": false,
+          "name": "Set the custom property",
+          "description": "sets custom property for setting ia4j jvm opts",
+          "myDir": "/modules/infa/edc/common"
+        },
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "cmd",
+            "captureOutputs": false,
+            "artifacts": [],
+            "arguments": [],
+            "environment": [],
+            "mergeStreams": false,
+            "inheritIo": true,
+            "cmd": "echo \"The ia4j files are copied to cluster and the custom property is added to the CS. Rerun the scanner and check for the ia4j output files in ${output_dir}\"",
+            "cwd": "",
+            "timeout": -1
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": true,
+          "privateTask": false,
+          "name": "Inform user",
+          "description": "",
+          "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+        }
+      ],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [
+        {
+          "title": "userName",
+          "name": "userName",
+          "description": "domain username",
+          "possibleValue": ""
+        },
+        {
+          "title": "password",
+          "name": "password",
+          "description": "domain password",
+          "possibleValue": ""
+        },
+        {
+          "title": "securityDomain",
+          "name": "securityDomain",
+          "description": "security domain",
+          "possibleValue": ""
+        },
+        {
+          "title": "csName",
+          "name": "csName",
+          "description": "catalog service name",
+          "possibleValue": ""
+        },
+        {
+          "title": "ia4j_config",
+          "name": "ia4j_config",
+          "description": "ia4j config file",
+          "possibleValue": ""
+        },
+        {
+          "title": "output_dir",
+          "name": "output_dir",
+          "description": "output directory of the ia4j",
+          "possibleValue": ""
+        }
+      ],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": true,
+      "interactive": true,
+      "privateTask": false,
+      "name": "attachIa4jToScanner",
+      "description": "Attaches ia4j to scanner",
+      "myDir": "/modules/infa/edc/common"
+    }
+  ],
+  "conditions": [],
+  "nameResolvers": [
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "url\u003d$(echo \u0027${infa.edc.common.LDM_Config/ingest.mongo.url}\u0027 | sed \u0027s/CN.*@//\u0027)\necho \"url\u003d$url\"\n",
+        "cwd": "",
+        "timeout": 0
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "clusterUrlComputer",
+      "description": "",
+      "myDir": "/root/probes/modules/infa/edc/utils",
+      "label": ""
+    }
+  ],
+  "variables": [
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.isp.common.INFA_KEYSTORE}/${infa.edc.common.LDM_Config/ldm.isp.ics.service.name}/cluster_certs"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "clusterCertsDir",
+      "description": "",
+      "myDir": "/modules/infa/edc/utils"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.utils.clusterUrlComputer/url}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "clusterUrl",
+      "description": "",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.LDM_Config/ingest.mongo.db}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "ingestDBName",
+      "description": "MongoDB DB name used by catalog",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.LDM_Config/orchestration.mongo.db}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "jobDBName",
+      "description": "MongoDB DB name used by catalog",
+      "myDir": "/modules"
+    }
+  ],
+  "name": "utils",
+  "description": "EDC utilities",
+  "myDir": "/modules"
+}

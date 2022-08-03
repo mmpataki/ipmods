@@ -1,0 +1,294 @@
+{
+    "testSuite": false, 
+    "tasks": [
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Setup server on remote node", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "SSHs to remote host and run a server", 
+                    "args": {
+                        "inheritIo": false, 
+                        "artifacts": [], 
+                        "cmd": "netstat -nlp | grep 8983 | grep LISTE[N]\nif [ \"$?\" != \"0\" ]; then\n   nc -l ${port}\nfi", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "timeout": 5000, 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules/java/net", 
+                    "executionType": {
+                        "hostname": "${remoteHost}", 
+                        "type": "ssh", 
+                        "user": "${sshUser}"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "interactive": false
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Try connecting", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "Connects using nc to remote server", 
+                    "args": {
+                        "inheritIo": false, 
+                        "artifacts": [], 
+                        "cmd": "sleep 3\nnc -zv ${remoteHost} ${port}", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "timeout": -1, 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules/java/net", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "interactive": false
+                }
+            ], 
+            "name": "testPortOpenWithRemoteServerLocalHost", 
+            "singleOutput": false, 
+            "userInputs": [
+                {
+                    "possibleValue": "", 
+                    "description": "SSH username to login to remote user", 
+                    "name": "sshUser", 
+                    "value": "a", 
+                    "title": "sshUser"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "Hostname/IP where the server will be set up", 
+                    "name": "remoteHost", 
+                    "value": "a", 
+                    "title": "remoteHost"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "Port number on which server will listen", 
+                    "name": "port", 
+                    "value": "a", 
+                    "title": "port"
+                }
+            ], 
+            "description": "Set up a server on a remote host, connect to it from localhost.\n    Note: server should ssh'able using password less authentication", 
+            "args": {
+                "ref": "", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules/java/net", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "noopTask", 
+            "runParallel": true, 
+            "failFast": true, 
+            "interactive": false
+        }, 
+        {
+            "inputs": {}, 
+            "subTasks": [
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "userNotice": "", 
+                    "name": "setup server", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "", 
+                    "args": {
+                        "inheritIo": false, 
+                        "artifacts": [], 
+                        "cmd": "nc -l ${port}", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "timeout": 5000, 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules/common/net", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "interactive": false
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "userNotice": "", 
+                    "name": "try connecting from remote host", 
+                    "singleOutput": false, 
+                    "userInputs": [], 
+                    "description": "", 
+                    "args": {
+                        "inheritIo": false, 
+                        "artifacts": [], 
+                        "cmd": "nc -zv ${common.net.hostname} ${port}", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "timeout": 0, 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules/common/net", 
+                    "executionType": {
+                        "hostname": "${remoteHost}", 
+                        "type": "ssh", 
+                        "user": "${sshUser}"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "interactive": false
+                }
+            ], 
+            "userNotice": "", 
+            "name": "testOpenPortWithRemoteClient", 
+            "singleOutput": false, 
+            "userInputs": [
+                {
+                    "possibleValue": "", 
+                    "description": "user name to use to ssh to remote node", 
+                    "name": "sshUser", 
+                    "title": "sshUser"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "hostname of machine where client should run", 
+                    "name": "remoteHost", 
+                    "title": "remoteHost"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "port on which server listens", 
+                    "name": "port", 
+                    "title": "port"
+                }
+            ], 
+            "description": "Sets up server on localhost, client on remote server and tests connection", 
+            "args": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "", 
+                "environment": [], 
+                "arguments": [], 
+                "timeout": 0, 
+                "mergeStreams": false, 
+                "type": "cmd", 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules/common/net", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "noopTask", 
+            "runParallel": true, 
+            "failFast": true, 
+            "interactive": false
+        }
+    ], 
+    "name": "net", 
+    "variables": [
+        {
+            "singleton": true, 
+            "name": "hostname", 
+            "myDir": "/modules/common/net", 
+            "delimiter": ",", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${common.net.hostnameFinder/fqhn}"
+            ], 
+            "type": "var", 
+            "description": ""
+        }
+    ], 
+    "myDir": "/modules/java/net", 
+    "nameResolvers": [
+        {
+            "description": "", 
+            "cmd": {
+                "inheritIo": false, 
+                "artifacts": [], 
+                "cmd": "echo \"fqhn=$(hostname -f)\"", 
+                "environment": [], 
+                "arguments": [], 
+                "timeout": 0, 
+                "mergeStreams": false, 
+                "cwd": "", 
+                "captureOutputs": false
+            }, 
+            "myDir": "/modules/common/net", 
+            "nameResolvers": [], 
+            "props": {}, 
+            "type": "cmdNr", 
+            "name": "hostnameFinder"
+        }
+    ], 
+    "conditions": [], 
+    "description": "Tasks to do java net operations"
+}

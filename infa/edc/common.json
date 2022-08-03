@@ -1,0 +1,847 @@
+{
+  "testSuite": false,
+  "tasks": [
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "echo ${infa.edc.common.edcURL}",
+        "cwd": "",
+        "timeout": -1
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "type": "java.util.HashMap"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "printEDCURL",
+      "description": "",
+      "myDir": "/modules"
+    },
+    {
+      "type": "conditionTask",
+      "conditionText": "Catalog service is available",
+      "args": {
+        "type": "ref",
+        "ref": "infa.isp.common.Ping service"
+      },
+      "subTasks": [
+        {
+          "type": "conditionTask",
+          "conditionText": "desired mode is REGULAR",
+          "args": {
+            "type": "cmd",
+            "captureOutputs": false,
+            "artifacts": [],
+            "arguments": [],
+            "environment": [],
+            "mergeStreams": false,
+            "inheritIo": false,
+            "cmd": "test ${CS_MODE} \u003d REGULAR",
+            "cwd": "",
+            "timeout": -1
+          },
+          "subTasks": [
+            {
+              "type": "conditionTask",
+              "conditionText": "CS is in READONLYMODE",
+              "args": {
+                "type": "cmd",
+                "captureOutputs": false,
+                "artifacts": [],
+                "arguments": [],
+                "environment": [],
+                "mergeStreams": false,
+                "inheritIo": false,
+                "cmd": "test `curl -s --insecure --user \"${infa.isp.common.userName}:${infa.isp.common.password}\" \"${infa.edc.common.edcURL}/access/1/catalog/catalogMode\"` \u003d READONLYMODE",
+                "cwd": "",
+                "timeout": -1
+              },
+              "subTasks": [
+                {
+                  "type": "uniTask",
+                  "args": {
+                    "type": "cmd",
+                    "captureOutputs": false,
+                    "artifacts": [],
+                    "arguments": [],
+                    "environment": [],
+                    "mergeStreams": false,
+                    "inheritIo": false,
+                    "cmd": "curl -svX POST --insecure --user \"${infa.isp.common.userName}:${infa.isp.common.password}\" \"${infa.edc.common.edcURL}/access/1/catalog/catalogMode/REGULAR\"",
+                    "cwd": "",
+                    "timeout": -1
+                  },
+                  "subTasks": [],
+                  "executionType": {
+                    "type": "local"
+                  },
+                  "nameResolvers": [],
+                  "inputs": {},
+                  "userInputs": [],
+                  "retryStrategy": {
+                    "type": "noRetryStrategy",
+                    "retry": 0
+                  },
+                  "failureHandlingStrategy": {
+                    "type": "noOpFailureHandlerStrategy"
+                  },
+                  "singleOutput": false,
+                  "interactive": false,
+                  "privateTask": false,
+                  "name": "Set it to REGULAR",
+                  "description": "",
+                  "myDir": "/modules"
+                }
+              ],
+              "executionType": {
+                "type": "local"
+              },
+              "nameResolvers": [],
+              "inputs": {},
+              "userInputs": [],
+              "retryStrategy": {
+                "type": "noRetryStrategy",
+                "retry": 0
+              },
+              "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+              },
+              "singleOutput": false,
+              "interactive": false,
+              "privateTask": false,
+              "name": "Check the mode of the CS",
+              "description": "",
+              "myDir": "/modules"
+            },
+            {
+              "type": "conditionTask",
+              "conditionText": "CS is in REGULAR mode",
+              "args": {
+                "type": "cmd",
+                "captureOutputs": false,
+                "artifacts": [],
+                "arguments": [],
+                "environment": [],
+                "mergeStreams": false,
+                "inheritIo": false,
+                "cmd": "test `curl -s --insecure --user \"${infa.isp.common.userName}:${infa.isp.common.password}\" \"${infa.edc.common.edcURL}/access/1/catalog/catalogMode\"` \u003d REGULAR",
+                "cwd": "",
+                "timeout": -1
+              },
+              "subTasks": [
+                {
+                  "type": "uniTask",
+                  "args": {
+                    "type": "cmd",
+                    "captureOutputs": false,
+                    "artifacts": [],
+                    "arguments": [],
+                    "environment": [],
+                    "mergeStreams": false,
+                    "inheritIo": false,
+                    "cmd": "curl -vX POST -s --insecure --user \"${infa.isp.common.userName}:${infa.isp.common.password}\" \"${infa.edc.common.edcURL}/access/1/catalog/catalogMode/READONLYMODE\"",
+                    "cwd": "",
+                    "timeout": -1
+                  },
+                  "subTasks": [],
+                  "executionType": {
+                    "type": "local"
+                  },
+                  "nameResolvers": [],
+                  "inputs": {},
+                  "userInputs": [],
+                  "retryStrategy": {
+                    "type": "noRetryStrategy",
+                    "retry": 0
+                  },
+                  "failureHandlingStrategy": {
+                    "type": "noOpFailureHandlerStrategy"
+                  },
+                  "singleOutput": false,
+                  "interactive": false,
+                  "privateTask": false,
+                  "name": "Run the REST API and set READONLYMODE mode",
+                  "description": "",
+                  "myDir": "/modules"
+                }
+              ],
+              "executionType": {
+                "type": "local"
+              },
+              "nameResolvers": [],
+              "inputs": {},
+              "userInputs": [],
+              "retryStrategy": {
+                "type": "noRetryStrategy",
+                "retry": 0
+              },
+              "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+              },
+              "singleOutput": false,
+              "interactive": false,
+              "privateTask": false,
+              "name": "Check the mode of the CS",
+              "description": "",
+              "myDir": "/modules"
+            }
+          ],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "Check what is desired mode",
+          "description": "",
+          "myDir": "/modules"
+        },
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "ref",
+            "ref": "infa.isp.common.Run infacmd"
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {
+            "PLUGIN_ARGUMENTS": "-sn \"${infa.edc.common.csName}\" -o \"LdmCustomOptions.ldm.catalog.switchmode\u003d${CS_MODE}\"",
+            "PLUGIN_COMMAND": "updateServiceOptions ",
+            "PLUGIN": "ldm"
+          },
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "Set it using infacmd",
+          "description": "",
+          "myDir": "/modules"
+        }
+      ],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "SERVICE_NAME": "${infa.edc.common.csName}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "Set catalog mode",
+      "description": "Set the Catalog service mode to READONLY or REGULAR",
+      "myDir": "/modules"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.isp.common.Stop a service"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "SERVICE_NAME": "${infa.edc.common.csName}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "Shutdown Catalog service",
+      "description": " Shuts down the Catalog service and waits for it to go down",
+      "myDir": "/modules"
+    },
+    {
+      "type": "noopTask",
+      "runParallel": false,
+      "failFast": true,
+      "args": {
+        "type": "ref",
+        "ref": ""
+      },
+      "subTasks": [
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "ref",
+            "ref": "infa.isp.common.Start a service"
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {
+            "SERVICE_NAME": "${infa.edc.common.ihsName}"
+          },
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "Start IHS",
+          "description": "Starts IHS if not started",
+          "myDir": "/modules"
+        },
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "ref",
+            "ref": "infa.isp.common.Start a service"
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {
+            "SERVICE_NAME": "${infa.edc.common.mrsName}"
+          },
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "Start MRS",
+          "description": "Start MRS if not started",
+          "myDir": "/modules"
+        },
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "ref",
+            "ref": "infa.isp.common.Start a service"
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {
+            "SERVICE_NAME": "${infa.edc.common.csName}"
+          },
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "Start catalog service",
+          "description": "",
+          "myDir": "/modules"
+        }
+      ],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "Start catalog service",
+      "description": "",
+      "myDir": "/modules"
+    }
+  ],
+  "conditions": [
+    {
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [
+          "${infa.edc.common.edcURL}/access/1/catalog/catalogMode",
+          "--user",
+          "\"${infa.isp.common.userName}:${infa.isp.common.password}\"",
+          "| grep REGULAR"
+        ],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "curl",
+        "cwd": "",
+        "timeout": -1
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "isInRegularMode",
+      "description": "Is catalog service in REGULAR mode?",
+      "myDir": "/modules"
+    },
+    {
+      "args": {
+        "type": "ref",
+        "ref": "${infa.isp.common.Ping service}"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "SERVICE_NAME": "${infa.edc.common.csName}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "isCSUp",
+      "description": "Check if CS is up",
+      "myDir": "/modules"
+    }
+  ],
+  "nameResolvers": [
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [
+          "ldm",
+          "listServiceOptions",
+          "-un",
+          "${infa.isp.common.userName}",
+          "-pd",
+          "${infa.isp.common.password}",
+          "-sdn",
+          "${infa.isp.common.securityDomain}",
+          "-dn",
+          "${infa.isp.common.domainName}",
+          "-sn",
+          "${infa.edc.common.csName}"
+        ],
+        "environment": [],
+        "mergeStreams": true,
+        "inheritIo": false,
+        "cmd": "./infacmd.sh",
+        "cwd": "${infa.isp.common.INFA_HOME}/isp/bin",
+        "timeout": -1
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "serviceProps",
+      "description": "Captures the service props of an EDC service",
+      "myDir": "/modules"
+    },
+    {
+      "type": "fileBasedNr",
+      "props": {},
+      "fileName": "${infa.edc.common.logDir}/${infa.edc.common.SCN}/spark/application.properties",
+      "fileType": "props",
+      "decodeValues": false,
+      "nameResolvers": [],
+      "name": "appProps",
+      "description": "Loading properties from application.properties file",
+      "myDir": "/modules"
+    },
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "output\u003d`./infacmd.sh isp listServices -dn ${infa.isp.common.domainName} -un ${infa.isp.common.userName} -pd ${infa.isp.common.password} -st LDM`; if [ \"$?\" \u003d\u003d \"0\" ]; then echo \"$output\" |grep -v \u0027Command ran successfully\u0027|sort|uniq|tr \u0027\\n\u0027 \u0027,\u0027 |sed \u0027s/.$//\u0027|xargs printf \"SERVICES\u003d%s\"; fi",
+        "cwd": "${infa.isp.common.INFA_HOME}/isp/bin",
+        "timeout": -1
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "CS service lister",
+      "description": "Lists the catalog services in a domain",
+      "myDir": "/modules/infa/isp/common"
+    },
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "wget --no-check-certificate ${infa.edc.common.edcURL}/access/1/catalog/resources --user \"${infa.isp.common.securityDomain}\\\\${infa.isp.common.userName}\" --password ${infa.isp.common.password} -qO- | python -c \"import  sys, json; print(\u0027,\u0027.join(map(lambda x: x[\u0027resourceName\u0027], json.load(sys.stdin))))\"|xargs printf \"resources\u003d%s\"",
+        "cwd": "",
+        "timeout": -1
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "csResources",
+      "description": "Provides resources available in catalog. Search for resources",
+      "myDir": "/modules"
+    },
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "./run ${infa.isp.common.domainName} \"${infa.edc.common.csName}\" \"${infa.isp.common.userName}\" \"${infa.isp.common.password}\" \"${infa.isp.common.securityDomain}\" .",
+        "cwd": "${BINDIR}/isp/scdump",
+        "timeout": -1
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "scdump",
+      "description": "Runs the scdump for a CS to figure out the service properties",
+      "myDir": "/modules"
+    },
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "echo \u0027${infa.edc.common.edcURL}\u0027 | sed \u0027s/.*\\/\\//HOST\u003d/g\u0027 | sed \u0027s/:/\\nPORT\u003d/g\u0027",
+        "cwd": "",
+        "timeout": -1
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "hostportprovider",
+      "description": "Finds out hostname and port of a CS service",
+      "myDir": "/modules"
+    },
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "echo \"SERVICES\u003d`/bin/ls -l $INFA_HOME/logs/*/services/CatalogService/*/LDM.log | grep -o \u0027CatalogService.*\u0027 | awk -F / \u0027{print $2}\u0027 | tr \u0027\\n\u0027 \u0027,\u0027`\"",
+        "cwd": "",
+        "timeout": -1
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "Log file based CS service finder",
+      "description": "Based on the logs directories structure resolves the CS names",
+      "myDir": "/modules"
+    },
+    {
+      "type": "fileBasedNr",
+      "props": {},
+      "fileName": "${infa.edc.common.logDir}/LDM_Config.log",
+      "fileType": "props",
+      "decodeValues": true,
+      "nameResolvers": [],
+      "name": "LDM_Config",
+      "description": "Resolves the names by reading LDM_Config.log",
+      "myDir": "/modules/infa/isp/common"
+    },
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "echo \"CSPID\u003d$(ps -ef | grep \u0027${infa.isp.common.INFA_HOME}\u0027 | grep InfaTomcatBootstrap | grep \u0027CatalogService/${infa.edc.common.csName}/${infa.edc.common.csName}_jsf.log\u0027 | awk \u0027{print $2}\u0027)\"",
+        "cwd": "",
+        "timeout": -1
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "csPidFinder",
+      "description": "Finds the CS pid",
+      "myDir": "/root/probes/modules"
+    },
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "echo ${infa.edc.common.LDM_Config/ldm.ldm.service.app.url} | awk -F : \u0027{print $3}\u0027",
+        "cwd": "",
+        "timeout": 0
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "edcPortFinder",
+      "description": "",
+      "myDir": "/root/probes/modules"
+    }
+  ],
+  "variables": [
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.serviceProps/ProjectRepository.prsServiceName}"
+      ],
+      "multiValued": false,
+      "name": "mrsName",
+      "description": "Name of MRS associated with EDC",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.serviceProps/ClusterOptions.clusterName}"
+      ],
+      "multiValued": false,
+      "name": "SCN",
+      "description": "Service cluster name of CS",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": false,
+      "possibleValues": [
+        "${infa.edc.common.Log file based CS service finder/SERVICES}",
+        "${infa.edc.common.CS service lister/SERVICES}",
+        "${foo/Catalog service name}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "csName",
+      "description": "Catalog service name",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.serviceProps/ClusterOptions.infaHadoopServiceName}"
+      ],
+      "multiValued": false,
+      "name": "ihsName",
+      "description": "Name of the IHS associated with Catalog service",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.serviceProps/ClusterOptions.isExternalCluster}"
+      ],
+      "multiValued": false,
+      "name": "isExternalCluster",
+      "description": "Boolean to indicate whether CS is configured with external cluster",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.LDM_Config/ldm.ldm.service.app.url}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "edcURL",
+      "description": "EDC URL",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.isp.common.INFA_HOME}/logs/${infa.isp.common.nodeName}/services/CatalogService/${infa.edc.common.csName}"
+      ],
+      "multiValued": false,
+      "name": "logDir",
+      "description": "CS log dir",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": false,
+      "possibleValues": [
+        "${infa.edc.common.csResources/resources}"
+      ],
+      "delimiter": ",",
+      "multiValued": true,
+      "name": "CatalogResourcesCollection",
+      "description": "Selected resources from catalog",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.csResources/resources}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "CatalogResourcesString",
+      "description": "Selected resources from catalog as a CSV string",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.hostportprovider/HOST}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "edcHost",
+      "description": "Host where CS is running",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.hostportprovider/PORT}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "edcPort",
+      "description": "TCP port on which EDC is listening",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": false,
+      "possibleValues": [
+        "${infa.edc.common.LDM_Config/ldm.isp.ics.service.name}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "icsName",
+      "description": "10.5 ICS name",
+      "myDir": "/modules/infa/edc/utils"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.common.csPidFinder/CSPID}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "csPid",
+      "description": "",
+      "myDir": "/root/probes/modules"
+    }
+  ],
+  "name": "common",
+  "description": "EDC variables",
+  "myDir": "/modules"
+}

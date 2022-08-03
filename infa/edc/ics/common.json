@@ -1,0 +1,369 @@
+{
+  "testSuite": false,
+  "tasks": [
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "curl --cacert /opt/informatica/edc_105/services/shared/security/ICS-EDC-PROD/client_certs/infa_pubcert.pem --key /opt/informatica/edc_105/services/shared/security/ICS-EDC-PROD/client_certs/infa_privkey.pem --cert /opt/informatica/edc_105/services/shared/security/ICS-EDC-PROD/client_certs/infa_nodecert.pem  https://QAMV3-SLIX131.als.local:4646/v1/nodes",
+        "cwd": "",
+        "timeout": -1
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "Ping nomad (get nomad nodes)",
+      "description": "",
+      "myDir": "/modules/infa/isp/common"
+    }
+  ],
+  "conditions": [],
+  "nameResolvers": [
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "output\u003d`./infacmd.sh isp listServices -dn ${infa.isp.common.domainName} -un ${infa.isp.common.userName} -pd ${infa.isp.common.password} -sdn ${infa.isp.common.securityDomain} -st IHS`; if [ \"$?\" \u003d\u003d \"0\" ]; then echo \"$output\" |grep -v \u0027Command ran successfully\u0027|sort|uniq|tr \u0027\\n\u0027 \u0027,\u0027 |sed \u0027s/.$//\u0027|xargs printf \"SERVICES\u003d%s\"; fi",
+        "cwd": "${infa.isp.common.INFA_HOME}/isp/bin",
+        "timeout": -1
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "ICS service lister",
+      "description": "Figures out the ICS names based on the infacmd command",
+      "myDir": "/modules"
+    },
+    {
+      "type": "fileBasedNr",
+      "props": {},
+      "fileName": "${infa.edc.ics.common.icsLogDir}/ICS_Config.log",
+      "fileType": "props",
+      "decodeValues": true,
+      "nameResolvers": [],
+      "name": "ICS_Config",
+      "description": "ICS_Config.log based prop resolver",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "hosts\u003d$(\necho -e \"${infa.edc.ics.common.ICS_Config/ClusterDataNodes},${infa.edc.ics.common.ICS_Config/ClusterProcessingNodes}\" | \n  tr , \u0027\\n\u0027 |\n  sort |\n  uniq |\n  tr \u0027\\n\u0027 ,\n)\necho \"hosts\u003d$hosts\"",
+        "cwd": "",
+        "timeout": 0
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "ClusterNodeListProvider",
+      "description": "",
+      "myDir": "/root/probes/modules/infa/edc/ics/common"
+    },
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "echo \"SERVICES\u003d`/bin/ls -l $INFA_HOME/logs/*/services/InfaHadoopService/*/ICS.log | grep -o \u0027InfaHadoopService.*\u0027 | awk -F / \u0027{print $2}\u0027 | tr \u0027\\n\u0027 \u0027,\u0027`\"",
+        "cwd": "",
+        "timeout": 0
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "Log file based ICS service finder",
+      "description": "",
+      "myDir": "/root/probes/modules",
+      "label": ""
+    },
+    {
+      "type": "cmdNr",
+      "cmd": {
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "services\u003d\"`ps -ef|grep \u0027FrameworksLog.*/[I]nfaHadoopService/.*/.*_jsf.log\u0027 -o | awk -F / \u0027{print $9}\u0027`\"\nif [ \"$services\" !\u003d \"\" ]; then\n   echo \"SERVICES\u003d$services\"\nfi\n",
+        "cwd": "",
+        "timeout": 0
+      },
+      "props": {},
+      "nameResolvers": [],
+      "name": "runningIcsFinder",
+      "description": "finds a running ICS",
+      "myDir": "/root/probes/modules",
+      "label": ""
+    }
+  ],
+  "variables": [
+    {
+      "type": "var",
+      "singleton": false,
+      "possibleValues": [
+        "${infa.edc.ics.common.Log file based ICS service finder/SERVICES}",
+        "${infa.edc.ics.common.runningIcsFinder/SERVICES}",
+        "${infa.edc.ics.common.ICS service lister/SERVICES}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "icsName",
+      "description": "Name of a ICS service",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.isp.common.INFA_HOME}/services/shared/security/${infa.edc.ics.common.icsName}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "certsDir",
+      "description": "Location on the infa domain node where the ICS certificates are stored",
+      "myDir": "/modules"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.isp.common.INFA_HOME}/logs/${infa.isp.common.nodeName}/services/InfaHadoopService/${infa.edc.common.icsName}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "icsLogDir",
+      "description": "ICS log directory",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "var",
+      "singleton": false,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/NomadServerHosts}"
+      ],
+      "delimiter": ",",
+      "multiValued": true,
+      "name": "nomadNodes",
+      "description": "Comma separated list of nomad nodes",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/ClusterGatewayHost}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "gateWayHost",
+      "description": "",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/ClusterUser}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "clusterUser",
+      "description": "Cluster user used to ssh",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "var",
+      "singleton": false,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/SolrHosts}"
+      ],
+      "delimiter": ",",
+      "multiValued": true,
+      "name": "solrNodes",
+      "description": "",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "var",
+      "singleton": false,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/PostgresHost}"
+      ],
+      "delimiter": ",",
+      "multiValued": true,
+      "name": "postGresNodes",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/SolrPort}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "solrPort",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/PostgresPort}"
+      ],
+      "delimiter": ",",
+      "multiValued": false,
+      "name": "postGresPort",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/NomadRpcPort}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "nomadRpcPort",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/NomadHttpPort}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "nomadHttpPort",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/NomadSerfPort}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "nomadSerfPort",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/MongoPort}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "mongoPort",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/ZkPort}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "zkPort",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "var",
+      "singleton": false,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/ZkHosts}"
+      ],
+      "delimiter": ",",
+      "multiValued": true,
+      "name": "zkNodes",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "var",
+      "singleton": false,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/MongoHosts}"
+      ],
+      "delimiter": ",",
+      "multiValued": true,
+      "name": "mongoNodes",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "var",
+      "singleton": false,
+      "possibleValues": [
+        "${infa.edc.ics.common.ClusterNodeListProvider/hosts}"
+      ],
+      "delimiter": ",",
+      "multiValued": true,
+      "name": "allClusterNodes",
+      "description": "list of all cluster nodes",
+      "myDir": "/root/probes/modules/infa/edc/ics/common"
+    },
+    {
+      "type": "var",
+      "singleton": true,
+      "possibleValues": [
+        "${infa.edc.ics.common.ICS_Config/ClusterCustomDir}"
+      ],
+      "delimiter": "",
+      "multiValued": false,
+      "name": "clusterCustomDir",
+      "description": "Directory where installation of subservices \u0026 data resides on cluster",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests",
+      "label": ""
+    }
+  ],
+  "name": "common",
+  "description": "stuff related to 10.5 ICS (not 10.4 IHS)",
+  "myDir": "/modules"
+}

@@ -1,0 +1,1179 @@
+{
+  "testSuite": true,
+  "tasks": [
+    {
+      "type": "testTask",
+      "mitigationSteps": "Work with your sysadmin \n   - or -\nRefer steps from\n   https://kerneltalks.com/howto/how-to-setup-domain-name-in-linux-server/",
+      "successMessage": "",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "test ! -z \"`dnsdomainname`\"",
+        "cwd": "",
+        "timeout": -1
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "test whether dnsdomain name command emits a value",
+      "description": "dnsdomainname command is executed to figure out the domain name while creating certificates for the ICS services. If this command outputs empty value, the certificates generated are useless.",
+      "myDir": "/modules/infa/edc/backup"
+    },
+    {
+      "type": "iterTask",
+      "itvName": "node",
+      "collection": "${inputnodes}",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "",
+        "cwd": "",
+        "timeout": 0
+      },
+      "subTasks": [
+        {
+          "type": "testTask",
+          "mitigationSteps": "${mitigationSteps}",
+          "successMessage": "${successMessage}",
+          "args": {
+            "type": "ref",
+            "ref": "${task}"
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "testDomainToClusterNodes",
+          "description": "",
+          "myDir": "/modules/infa/edc/ics/prereqtests",
+          "label": "from ${node}"
+        }
+      ],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": true,
+      "name": "testPortOpenGivenClusterNodesFromDomain",
+      "description": "sets up server on all given nodes and does a test connection",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testPortOpenGivenClusterNodesFromDomain"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "task": "infa.edc.ics.prereqtests.testDomainToClusterNodes",
+        "port": "8983",
+        "successMessage": "The port ${port} (solr http port) on machine ${node} is reachable from ${common.net.hostname}",
+        "mitigationSteps": "The port ${port} (solr http port) on machine ${node} should be reachable from ${common.net.hostname}",
+        "inputnodes": "${infa.edc.ics.common.solrNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "testSolrPortOpenFromDomain",
+      "description": "sets up server on all solr nodes and does a test connection",
+      "myDir": "/modules/common/net"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testPortOpenGivenClusterNodesFromDomain"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "task": "infa.edc.ics.prereqtests.testDomainToClusterNodes",
+        "port": "${infa.edc.ics.common.nomadHttpPort}",
+        "successMessage": "The port ${port} (nomad http port) on machine ${node} is reachable from ${common.net.hostname}",
+        "mitigationSteps": "The port ${port} (nomad http port) on machine ${node} should be reachable from ${common.net.hostname}",
+        "inputnodes": "${infa.edc.ics.common.nomadNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "testNomadHttpPortOpenFromDomainNode",
+      "description": "sets up server on all nomad nodes with nomad http port and does a test connection",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testPortOpenGivenClusterNodesFromDomain"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "task": "infa.edc.ics.prereqtests.testDomainToClusterNodes",
+        "port": "${infa.edc.ics.common.postGresPort}",
+        "successMessage": "The port ${port} (postgres port) on machine ${node} is reachable from ${common.net.hostname}",
+        "mitigationSteps": "The port ${port} (postgres port) on machine ${node} should be reachable from ${common.net.hostname}",
+        "inputnodes": "${infa.edc.ics.common.postGresNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "testPostgresPortOpenFromDomain",
+      "description": "sets up server on postgres node and does a test connection",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testPortOpenGivenClusterNodesFromDomain"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "task": "infa.edc.ics.prereqtests.testDomainToClusterNodes",
+        "port": "${infa.edc.ics.common.nomadRpcPort}",
+        "successMessage": "The port ${port} (nomad rpc port) on machine ${node} is reachable from ${common.net.hostname}",
+        "mitigationSteps": "The port ${port} (nomad rpc port) on machine ${node} should be reachable from ${common.net.hostname}",
+        "inputnodes": "${infa.edc.ics.common.nomadNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "testNomadRpcPortOpenFromDomain",
+      "description": "sets up server on all nomad nodes with nomad rpc port and does a test connection",
+      "myDir": "/modules/infa/edc/common"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testPortOpenGivenClusterNodesFromDomain"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "task": "infa.edc.ics.prereqtests.testDomainToClusterNodes",
+        "port": "${infa.edc.ics.common.mongoPort}",
+        "successMessage": "The port ${port} (mongo port) on machine ${node} is reachable from ${common.net.hostname}",
+        "mitigationSteps": "The port ${port} (mongo port) on machine ${node} should be reachable from ${common.net.hostname}",
+        "inputnodes": "${infa.edc.ics.common.mongoNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "testMongoPortOpenFromDomain",
+      "description": "sets up server on all mongo nodes and does a test connection",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testPortOpenGivenClusterNodesFromDomain"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "task": "infa.edc.ics.prereqtests.testDomainToClusterNodes",
+        "port": "${infa.edc.ics.common.zkPort}",
+        "successMessage": "The port ${port} (zookeeper port) on machine ${node} is reachable from ${common.net.hostname}",
+        "mitigationSteps": "The port ${port} (zookeeper port) on machine ${node} should be reachable from ${common.net.hostname}",
+        "inputnodes": "${infa.edc.ics.common.zkNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "testZookeeperPortOpenFromDomain",
+      "description": "sets up server on all zookeeper nodes and does a test connection",
+      "myDir": "/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "noopTask",
+      "runParallel": true,
+      "failFast": true,
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "",
+        "cwd": "",
+        "timeout": 0
+      },
+      "subTasks": [
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "cmd",
+            "captureOutputs": false,
+            "artifacts": [],
+            "arguments": [],
+            "environment": [],
+            "mergeStreams": false,
+            "inheritIo": false,
+            "cmd": "ssh ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost} \u0027ssh ${infa.edc.ics.common.clusterUser}@${node} bash -s\u0027 \u003c\u003cEOF\n  set -x\n  txt\u003d$(timeout 5 nc -l ${port})\n  ecode\u003d\"$(echo $?)\"\n  if [ \"$txt\" \u003d\u003d \"hi\" ] || [ \"$ecode\" \u003d\u003d \"124\" ] || [ \"$ecode\" \u003d\u003d \"2\" ]; then\n\techo hell\n    exit 0\n  else\n    echo bell\n    exit $ecode\n  fi\nEOF\n",
+            "cwd": "",
+            "timeout": 0
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "setup server",
+          "description": "",
+          "myDir": "/modules/infa/edc/ics/prereqtests"
+        },
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "cmd",
+            "captureOutputs": false,
+            "artifacts": [],
+            "arguments": [],
+            "environment": [],
+            "mergeStreams": false,
+            "inheritIo": false,
+            "cmd": "sleep 3\necho hi | nc --send-only ${node} ${port}",
+            "cwd": "",
+            "timeout": 5000
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "run client",
+          "description": "",
+          "myDir": "/modules/infa/edc/ics/prereqtests"
+        }
+      ],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": true,
+      "name": "testDomainToClusterNodes",
+      "description": "",
+      "myDir": "/modules/infa/edc/ics/prereqtests",
+      "label": ""
+    },
+    {
+      "type": "iterTask",
+      "itvName": "node",
+      "collection": "${inputnodes}",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "",
+        "cwd": "",
+        "timeout": 0
+      },
+      "subTasks": [
+        {
+          "type": "testTask",
+          "mitigationSteps": "${mitigationSteps}",
+          "successMessage": "${successMessage}",
+          "args": {
+            "type": "cmd",
+            "captureOutputs": false,
+            "artifacts": [],
+            "arguments": [],
+            "environment": [],
+            "mergeStreams": false,
+            "inheritIo": false,
+            "cmd": "set -x\nssh ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost} \u0027ssh ${infa.edc.ics.common.clusterUser}@${node} timeout 5 bash -s\u0027 \u003c\u003cEOF\n  ${cmd}\nEOF\n",
+            "cwd": "",
+            "timeout": 0
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "runOnNode",
+          "description": "",
+          "myDir": "/root/probes/modules/infa/edc/ics/prereqtests",
+          "label": "testing on ${node}"
+        }
+      ],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": true,
+      "name": "testOnGivenNodes",
+      "description": "",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testOnGivenNodes"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "cmd": "test $(getenforce | tr \u0027[:upper:]\u0027 \u0027[:lower:]\u0027) !\u003d \"enforcing\"",
+        "successMessage": "Selinux is disabled / permissive on ${node}",
+        "mitigationSteps": "Run this command on the nodes which failed the test to configure selinux in  permissive mode `sudo setenforce permissive`",
+        "inputnodes": "${infa.edc.ics.common.allClusterNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "testSelinuxOnClusterNodes",
+      "description": "selinux must running in permissive or disabled mode on cluster nodes",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testPortOpenGivenClusterNodesFromDomain"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "task": "infa.edc.ics.prereqtests.testDomainToClusterNodes",
+        "port": "8280",
+        "successMessage": "The port ${port} on machine ${node} is reachable from ${common.net.hostname}",
+        "mitigationSteps": "The port ${port} on machine ${node} should be reachable from ${common.net.hostname}",
+        "inputnodes": "${infa.edc.ics.common.solrNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "testBlockedPorts",
+      "description": "",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "noopTask",
+      "runParallel": true,
+      "failFast": true,
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "",
+        "cwd": "",
+        "timeout": 0
+      },
+      "subTasks": [
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "cmd",
+            "captureOutputs": false,
+            "artifacts": [],
+            "arguments": [],
+            "environment": [],
+            "mergeStreams": false,
+            "inheritIo": false,
+            "cmd": "set -x\nnc -l ${port}\necode\u003d$?\nif [ \"$ecode\" \u003d\u003d \"2\" ]; then\n  exit 0\nelse\n  exit $ecode\nfi\n",
+            "cwd": "",
+            "timeout": 5000
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "setup server on domain node",
+          "description": "",
+          "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+        },
+        {
+          "type": "uniTask",
+          "args": {
+            "type": "cmd",
+            "captureOutputs": false,
+            "artifacts": [],
+            "arguments": [],
+            "environment": [],
+            "mergeStreams": false,
+            "inheritIo": false,
+            "cmd": "ssh ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost} \u0027ssh ${infa.edc.ics.common.clusterUser}@${node} timeout 5s bash -s\u0027 \u003c\u003cEOF\n   echo hi | nc --send-only ${common.net.hostname} ${port}\nEOF\n",
+            "cwd": "",
+            "timeout": 0
+          },
+          "subTasks": [],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "hit from cluster node",
+          "description": "",
+          "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+        }
+      ],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": true,
+      "name": "testOpenDomainPortFromCluster",
+      "description": "Connect to domain port from cluster nodes",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testPortOpenGivenClusterNodesFromDomain"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "task": "infa.edc.ics.prereqtests.testOpenDomainPortFromCluster",
+        "port": "${infa.edc.common.edcPort}",
+        "mitigationSteps": "EDC port should be reachable from cluster nodes (parameter assignment kind of tasks need this)",
+        "successMessage": "EDC port ${port} is reachable from ${node}",
+        "inputnodes": "${infa.edc.ics.common.allClusterNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "testEdcPortReachableFromClusterNode",
+      "description": "",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "iterTask",
+      "itvName": "snode",
+      "collection": "${serverNodes}",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "",
+        "cwd": "",
+        "timeout": 0
+      },
+      "subTasks": [
+        {
+          "type": "iterTask",
+          "itvName": "cnode",
+          "collection": "${clientNodes}",
+          "args": {
+            "type": "cmd",
+            "captureOutputs": false,
+            "artifacts": [],
+            "arguments": [],
+            "environment": [],
+            "mergeStreams": false,
+            "inheritIo": false,
+            "cmd": "",
+            "cwd": "",
+            "timeout": 0
+          },
+          "subTasks": [
+            {
+              "type": "uniTask",
+              "args": {
+                "type": "ref",
+                "ref": "${task}"
+              },
+              "subTasks": [],
+              "executionType": {
+                "type": "local"
+              },
+              "nameResolvers": [],
+              "inputs": {},
+              "userInputs": [],
+              "retryStrategy": {
+                "type": "noRetryStrategy",
+                "retry": 0
+              },
+              "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+              },
+              "userNotice": "",
+              "singleOutput": false,
+              "interactive": false,
+              "privateTask": false,
+              "name": "execute test",
+              "description": "",
+              "myDir": "/root/probes/modules/infa/edc/ics/prereqtests",
+              "label": ""
+            }
+          ],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "loop on client nodes",
+          "description": "",
+          "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+        }
+      ],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": true,
+      "name": "testBetweenClusterNodes",
+      "description": "",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "uniTask",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testBetweenClusterNodes"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "task": "infa.edc.ics.prereqtests.testOpenClusterPortFromCluster",
+        "clientNodes": "${infa.edc.ics.common.nomadNodes}",
+        "port": "8983",
+        "serverNodes": "${infa.edc.ics.common.solrNodes}",
+        "successMessage": "${snode}:${port} (${portpurpose}) is reachable from ${cnode}",
+        "mitigationSteps": "Configure firewall such as ${snode}:${port} (${portpurpose}) is reachable from ${cnode}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": true,
+      "name": "testXPortOpenFromYNodes",
+      "description": "tests whether X ports are open from Y nodes",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testXPortOpenFromYNodes"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "clientNodes": "${infa.edc.ics.common.nomadNodes}",
+        "port": "8983",
+        "serverNodes": "${infa.edc.ics.common.solrNodes}",
+        "portpurpose": "solr http port"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "testSolrPortOpenFromNomadNodes",
+      "description": "",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "conditionTask",
+      "conditionText": "serverNode !\u003d clientNode",
+      "args": {
+        "type": "cmd",
+        "captureOutputs": false,
+        "artifacts": [],
+        "arguments": [],
+        "environment": [],
+        "mergeStreams": false,
+        "inheritIo": false,
+        "cmd": "test \"${snode}\" !\u003d \"${cnode}\"",
+        "cwd": "",
+        "timeout": 0
+      },
+      "subTasks": [
+        {
+          "type": "noopTask",
+          "runParallel": true,
+          "failFast": true,
+          "args": {
+            "type": "cmd",
+            "captureOutputs": false,
+            "artifacts": [],
+            "arguments": [],
+            "environment": [],
+            "mergeStreams": false,
+            "inheritIo": false,
+            "cmd": "",
+            "cwd": "",
+            "timeout": 0
+          },
+          "subTasks": [
+            {
+              "type": "uniTask",
+              "args": {
+                "type": "cmd",
+                "captureOutputs": false,
+                "artifacts": [],
+                "arguments": [],
+                "environment": [],
+                "mergeStreams": false,
+                "inheritIo": false,
+                "cmd": "ssh ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost} \u0027ssh ${infa.edc.ics.common.clusterUser}@${snode} bash -s\u0027 \u003c\u003cEOF\n  set -x\n  txt\u003d$(timeout 5 nc -l ${port})\n  ecode\u003d\"$(echo $?)\"\n  if [ \"$txt\" \u003d\u003d \"hi\" ] || [ \"$ecode\" \u003d\u003d \"124\" ] || [ \"$ecode\" \u003d\u003d \"2\" ]; then\n    echo hell\n    exit 0\n  else\n    echo bell\n    exit $ecode\n  fi\nEOF\n",
+                "cwd": "",
+                "timeout": 0
+              },
+              "subTasks": [],
+              "executionType": {
+                "type": "local"
+              },
+              "nameResolvers": [],
+              "inputs": {},
+              "userInputs": [],
+              "retryStrategy": {
+                "type": "noRetryStrategy",
+                "retry": 0
+              },
+              "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+              },
+              "userNotice": "",
+              "singleOutput": false,
+              "interactive": false,
+              "privateTask": false,
+              "name": "setup server",
+              "description": "",
+              "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+            },
+            {
+              "type": "testTask",
+              "mitigationSteps": "${mitigationSteps}",
+              "successMessage": "${successMessage}",
+              "args": {
+                "type": "cmd",
+                "captureOutputs": false,
+                "artifacts": [],
+                "arguments": [],
+                "environment": [],
+                "mergeStreams": false,
+                "inheritIo": false,
+                "cmd": "sleep 2\nssh ${infa.edc.ics.common.clusterUser}@${infa.edc.ics.common.gateWayHost} \u0027ssh ${infa.edc.ics.common.clusterUser}@${cnode} bash -s\u0027 \u003c\u003cEOF\n  echo hi | timeout 2s nc --send-only ${snode} ${port}\nEOF\n",
+                "cwd": "",
+                "timeout": 0
+              },
+              "subTasks": [],
+              "executionType": {
+                "type": "local"
+              },
+              "nameResolvers": [],
+              "inputs": {},
+              "userInputs": [],
+              "retryStrategy": {
+                "type": "noRetryStrategy",
+                "retry": 0
+              },
+              "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+              },
+              "userNotice": "",
+              "singleOutput": false,
+              "interactive": false,
+              "privateTask": false,
+              "name": "run the client",
+              "description": "",
+              "myDir": "/root/probes/modules/infa/edc/ics/prereqtests",
+              "label": "from ${cnode} to ${snode}"
+            }
+          ],
+          "executionType": {
+            "type": "local"
+          },
+          "nameResolvers": [],
+          "inputs": {},
+          "userInputs": [],
+          "retryStrategy": {
+            "type": "noRetryStrategy",
+            "retry": 0
+          },
+          "failureHandlingStrategy": {
+            "type": "noOpFailureHandlerStrategy"
+          },
+          "userNotice": "",
+          "singleOutput": false,
+          "interactive": false,
+          "privateTask": false,
+          "name": "do the test",
+          "description": "",
+          "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+        }
+      ],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {},
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": true,
+      "name": "testOpenClusterPortFromCluster",
+      "description": "",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests"
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "",
+      "successMessage": "",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testOnGivenNodes"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "cmd": "/sbin/ldconfig -p | grep libtinfo.so.5",
+        "successMessage": "libtinfo.so.5 is present on ${node}",
+        "mitigationSteps": "Refer solutions in  https://knowledge.informatica.com/s/article/The-CreateContents-command-fails-during-Postgres-content-creation",
+        "inputnodes": "${infa.edc.ics.common.postGresNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "Check postgres node has libtinfo.so.5 installed",
+      "description": "libtinfo.so.5 is needed to run postgres clients which are used by the ICS to create postgres contents. The postgres shipped by ICS needs specifically libtinfo.so.5",
+      "myDir": "/root/probes/modules/infa/edc/ics/prereqtests",
+      "label": ""
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "If you have a multinode cluster, you need to make sure the remote-fs (network mounts are needed for backup process) systemd target is active on all Solr and Zookeeper nodes. You can use the below command to validate whether the remote-fs is active or node\n```\nsystemctl list-units --state\u003dactive | grep remote-fs.target\n```\n\nMore details are in \nhttps://knowledge.informatica.com/s/article/000176002",
+      "successMessage": "No problems due to remote-fs detected",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testOnGivenNodes"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "cmd": "systemctl list-units --state\u003dactive | grep remote-fs.target",
+        "successMessage": "Remote fs target is active",
+        "mitigationSteps": "Enable remote-fs systemd target here (take help from Linux admin)",
+        "inputnodes": "${infa.edc.ics.common.solrNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "test whether remote-fs is active on solr nodes",
+      "description": "`remote-fs` target is needed for solr and zookeeper services when ICS manages a multinode cluster. If this is not configured the zk and solr might fail to start",
+      "myDir": "/root/probes/modules/infa/edc/ics/common",
+      "label": ""
+    },
+    {
+      "type": "testTask",
+      "mitigationSteps": "If you have a multinode cluster, you need to make sure the remote-fs (network mounts are needed for backup process) systemd target is active on all Solr and Zookeeper nodes. You can use the below command to validate whether the remote-fs is active or node\n```\nsystemctl list-units --state\u003dactive | grep remote-fs.target\n```\n\nMore details are in \nhttps://knowledge.informatica.com/s/article/000176002",
+      "successMessage": "No problems due to remote-fs detected",
+      "args": {
+        "type": "ref",
+        "ref": "infa.edc.ics.prereqtests.testOnGivenNodes"
+      },
+      "subTasks": [],
+      "executionType": {
+        "type": "local"
+      },
+      "nameResolvers": [],
+      "inputs": {
+        "cmd": "systemctl list-units --state\u003dactive | grep remote-fs.target",
+        "successMessage": "Remote fs target is active",
+        "mitigationSteps": "Enable remote-fs systemd target here (take help from Linux admin)",
+        "inputnodes": "${infa.edc.ics.common.zkNodes}"
+      },
+      "userInputs": [],
+      "retryStrategy": {
+        "type": "noRetryStrategy",
+        "retry": 0
+      },
+      "failureHandlingStrategy": {
+        "type": "noOpFailureHandlerStrategy"
+      },
+      "userNotice": "",
+      "singleOutput": false,
+      "interactive": false,
+      "privateTask": false,
+      "name": "test whether remote-fs is active on zookeeper nodes",
+      "description": "`remote-fs` target is needed for solr and zookeeper services when ICS manages a multinode cluster. If this is not configured the zk and solr might fail to start",
+      "myDir": "/root/probes/modules/infa/edc/ics/common",
+      "label": ""
+    }
+  ],
+  "conditions": [],
+  "nameResolvers": [],
+  "variables": [],
+  "name": "prereqtests",
+  "description": "GCS pre-req tests for 10.5 installation",
+  "myDir": "/modules/infa/edc/backup"
+}

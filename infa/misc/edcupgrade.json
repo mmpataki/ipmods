@@ -1,0 +1,689 @@
+{
+    "testSuite": false, 
+    "tasks": [
+        {
+            "inputs": {
+                "DOMAIN_FILES_DIR": "${WORKDIR}/domainfiles", 
+                "LDM_BACKUP_DIR": "${WORKDIR}/ldmbackup", 
+                "EXPORT_DIR": "${WORKDIR}/export", 
+                "KEYTRUSTSTORES_DIR": "${WORKDIR}/truststores", 
+                "MRS_BACKUP_DIR": "${WORKDIR}/mrsbackup"
+            }, 
+            "subTasks": [
+                {
+                    "inputs": {
+                        "type": "java.util.HashMap"
+                    }, 
+                    "subTasks": [], 
+                    "name": "Create directories", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "mkdir -p ${infa.misc.edcupgrade.DOMAIN_FILES_DIR} ${infa.misc.edcupgrade.MRS_BACKUP_DIR} ${infa.misc.edcupgrade.EXPORT_DIR} ${infa.misc.edcupgrade.LDM_BACKUP_DIR} ${infa.misc.edcupgrade.KEYTRUSTSTORES_DIR}", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "Create directories to store the backup + config files."
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "start domain", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.isp.common.Start domain", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "we want to take CS backup so domain has come up"
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "Enable CS", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.edc.common.Start catalog service", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "Start the CS and wait for it to be up"
+                }, 
+                {
+                    "inputs": {
+                        "EDC_EXPORT_DIR": "${infa.misc.edcupgrade.EXPORT_DIR}"
+                    }, 
+                    "subTasks": [], 
+                    "name": "export_edc_content", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.edc.export.export", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "validate edc export", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "echo valid", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "Validate export files"
+                }, 
+                {
+                    "inputs": {
+                        "EDC_EXPORT_DIR": "${infa.misc.edcupgrade.EXPORT_DIR}"
+                    }, 
+                    "subTasks": [], 
+                    "name": "Export pk-fk enrichments", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.edc.export.export pkfk enrichment", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "Export enrichments"
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "validate pkfk export", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "echo valid", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {
+                        "MRS_BACKUP_FILE_PATH": "${infa.misc.edcupgrade.MRS_BACKUP_DIR}", 
+                        "CS_BACKUP_OUTPUTDIR": "${infa.misc.edcupgrade.LDM_BACKUP_DIR}"
+                    }, 
+                    "subTasks": [], 
+                    "name": "backup_edc", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.edc.backup.backupEDCPlusMRS", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {
+                        "BACKUPFILE": "${infa.misc.edcupgrade.LDM_BACKUP_DIR}/ldmbackup.zip"
+                    }, 
+                    "subTasks": [], 
+                    "name": "validate EDC backup", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.edc.backup.validate LDM backup file", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "validate MRS backup", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "echo valid", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {
+                        "DOMAIN_BACKUP_DIR": "${infa.misc.edcupgrade.DOMAIN_FILES_DIR}"
+                    }, 
+                    "subTasks": [], 
+                    "name": "backup_domain", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "infa.isp.common.Backup Domain", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "take domain backup"
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "validate domain backup", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "test -s \"${infa.misc.edcupgrade.DOMAIN_FILES_DIR}/domainBackup.mrep\"", 
+                        "environment": [], 
+                        "arguments": [], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": ""
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [], 
+                    "name": "backup infa keystore and truststore files", 
+                    "userInputs": [], 
+                    "args": {
+                        "artifacts": [], 
+                        "cmd": "cp", 
+                        "environment": [], 
+                        "arguments": [
+                            " -r  ", 
+                            "\"${infa.isp.common.trustStorePath}\"", 
+                            "\"${infa.misc.edcupgrade.KEYTRUSTSTORES_DIR}/\""
+                        ], 
+                        "mergeStreams": false, 
+                        "type": "cmd", 
+                        "cwd": "", 
+                        "captureOutputs": false
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "uniTask", 
+                    "description": "We need to take a backup of trustore and keystore files used by domain"
+                }, 
+                {
+                    "inputs": {}, 
+                    "subTasks": [
+                        {
+                            "inputs": {}, 
+                            "subTasks": [], 
+                            "name": "copy keys", 
+                            "userInputs": [], 
+                            "args": {
+                                "artifacts": [], 
+                                "cmd": "cp -rf \"${infa.isp.common.siteKeyDir}\"  \"${infa.misc.edcupgrade.DOMAIN_FILES_DIR}\"", 
+                                "environment": [], 
+                                "arguments": [], 
+                                "mergeStreams": false, 
+                                "type": "cmd", 
+                                "cwd": "", 
+                                "captureOutputs": false
+                            }, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "nameResolvers": [], 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "uniTask", 
+                            "description": ""
+                        }, 
+                        {
+                            "inputs": {}, 
+                            "subTasks": [], 
+                            "name": "copy domains infa", 
+                            "userInputs": [], 
+                            "args": {
+                                "artifacts": [], 
+                                "cmd": "cp -rf \"${infa.isp.common.INFA_HOME}/domains.infa\"  \"${infa.misc.edcupgrade.DOMAIN_FILES_DIR}\"", 
+                                "environment": [], 
+                                "arguments": [], 
+                                "mergeStreams": false, 
+                                "type": "cmd", 
+                                "cwd": "", 
+                                "captureOutputs": false
+                            }, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "nameResolvers": [], 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "uniTask", 
+                            "description": ""
+                        }, 
+                        {
+                            "inputs": {}, 
+                            "subTasks": [], 
+                            "name": "copy server xml", 
+                            "userInputs": [], 
+                            "args": {
+                                "artifacts": [], 
+                                "cmd": "cp -rf \"${infa.isp.common.INFA_HOME}/tomcat/conf/server.xml\"  \"${infa.misc.edcupgrade.DOMAIN_FILES_DIR}\"", 
+                                "environment": [], 
+                                "arguments": [], 
+                                "mergeStreams": false, 
+                                "type": "cmd", 
+                                "cwd": "", 
+                                "captureOutputs": false
+                            }, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "nameResolvers": [], 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "uniTask", 
+                            "description": ""
+                        }, 
+                        {
+                            "inputs": {}, 
+                            "subTasks": [], 
+                            "name": "isp config", 
+                            "userInputs": [], 
+                            "args": {
+                                "artifacts": [], 
+                                "cmd": "cp -r \"${infa.isp.common.INFA_HOME}/isp/config\" \"${infa.misc.edcupgrade.DOMAIN_FILES_DIR}\"", 
+                                "environment": [], 
+                                "arguments": [], 
+                                "mergeStreams": false, 
+                                "type": "cmd", 
+                                "cwd": "", 
+                                "captureOutputs": false
+                            }, 
+                            "myDir": "/modules", 
+                            "executionType": {
+                                "type": "local"
+                            }, 
+                            "failureHandlingStrategy": {
+                                "type": "noOpFailureHandlerStrategy"
+                            }, 
+                            "nameResolvers": [], 
+                            "retryStrategy": {
+                                "retry": 0, 
+                                "type": "noRetryStrategy"
+                            }, 
+                            "type": "uniTask", 
+                            "description": ""
+                        }
+                    ], 
+                    "name": "backup domain files", 
+                    "userInputs": [], 
+                    "args": {
+                        "ref": "", 
+                        "type": "ref"
+                    }, 
+                    "myDir": "/modules", 
+                    "executionType": {
+                        "type": "local"
+                    }, 
+                    "failureHandlingStrategy": {
+                        "type": "noOpFailureHandlerStrategy"
+                    }, 
+                    "nameResolvers": [], 
+                    "retryStrategy": {
+                        "retry": 0, 
+                        "type": "noRetryStrategy"
+                    }, 
+                    "type": "noopTask", 
+                    "failFast": true, 
+                    "description": "Backup\n   - nodemeta.xml\n   - server.xml\n   - domains.infa\n   - siteKey"
+                }
+            ], 
+            "userNotice": "1. Start the Informatica domain before this task is run.\n2. Make sure you take the backup of the DAA DB before you upgrade domain\n3. If you have configured the Advanced scanners, [collect the repo backup](https://docs.informatica.com/data-catalog/enterprise-data-catalog/10-5-1/upgrading-from-versions-10-4-0-and-later/upgrade-enterprise-data-catalog-in-an-internal-cluster/step-2--back-up-the-repositories-and-configuration-details/back-up-advanced-scanners.html)", 
+            "userInputs": [
+                {
+                    "possibleValue": "", 
+                    "description": "Security domain of the user", 
+                    "title": "Security domain", 
+                    "validationTask": "", 
+                    "value": "", 
+                    "name": "infa.isp.common.securityDomain"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "User name to login to domain", 
+                    "title": "Username", 
+                    "validationTask": "", 
+                    "value": "", 
+                    "name": "infa.isp.common.userName"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "Password to login to domain", 
+                    "title": "Password", 
+                    "validationTask": "${infa.isp.common.Authenticate}", 
+                    "value": "", 
+                    "name": "infa.isp.common.password"
+                }, 
+                {
+                    "possibleValue": "", 
+                    "description": "Place where all backups will be dumped", 
+                    "title": "Work directory", 
+                    "validationTask": "${infa.misc.edcupgrade.Test whether WORKDIR has 10GB space}", 
+                    "value": "", 
+                    "name": "WORKDIR"
+                }, 
+                {
+                    "possibleValue": "${infa.edc.common.csName}", 
+                    "description": "Catalog service of which backup will be collected", 
+                    "name": "infa.edc.common.csName", 
+                    "title": "Catalog service"
+                }
+            ], 
+            "description": "Takes\n    - Domain backup\n    - MRS backup\n    - EDC backup\n    - EDC content export\n    - EDC enrichment backup", 
+            "args": {
+                "ref": "", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "type": "noopTask", 
+            "failFast": true, 
+            "name": "BackupTasks"
+        }, 
+        {
+            "inputs": {
+                "directory": "${WORKDIR}", 
+                "requiredGB": "10"
+            }, 
+            "subTasks": [], 
+            "userNotice": "", 
+            "userInputs": [
+                {
+                    "possibleValue": "", 
+                    "description": "Location where backups will be dumped", 
+                    "name": "WORKDIR", 
+                    "value": "10", 
+                    "title": "WORKDIR"
+                }
+            ], 
+            "description": "", 
+            "args": {
+                "ref": "common.env.Test disk space", 
+                "type": "ref"
+            }, 
+            "myDir": "/modules", 
+            "executionType": {
+                "type": "local"
+            }, 
+            "successMessage": "The device containing ${directory} has ${requiredGB}GB space.", 
+            "failureHandlingStrategy": {
+                "type": "noOpFailureHandlerStrategy"
+            }, 
+            "nameResolvers": [], 
+            "retryStrategy": {
+                "retry": 0, 
+                "type": "noRetryStrategy"
+            }, 
+            "mitigationSteps": "The device containing ${directory} doesn't have ${requiredGB}GB space.", 
+            "type": "testTask", 
+            "name": "Test whether WORKDIR has 10GB space"
+        }
+    ], 
+    "name": "edcupgrade", 
+    "variables": [
+        {
+            "singleton": true, 
+            "name": "DOMAIN_FILES_DIR", 
+            "myDir": "/modules", 
+            "delimiter": ",", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${WORKDIR}/domainfiles"
+            ], 
+            "type": "var", 
+            "description": "Files like\n    - nodemeta.xml\n    - domains.infa\n    - isp/config\n    - siteKey"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Backup of MRS will be stored here", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${WORKDIR}/mrsbackup"
+            ], 
+            "type": "var", 
+            "name": "MRS_BACKUP_DIR"
+        }, 
+        {
+            "singleton": true, 
+            "description": "EDC export will be dumped here", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${WORKDIR}/export"
+            ], 
+            "type": "var", 
+            "name": "EXPORT_DIR"
+        }, 
+        {
+            "singleton": true, 
+            "description": "EDC backup will be dumped here", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${WORKDIR}/ldmbackup"
+            ], 
+            "type": "var", 
+            "name": "LDM_BACKUP_DIR"
+        }, 
+        {
+            "singleton": true, 
+            "description": "Keystore & truststore files will be dumped here", 
+            "myDir": "/modules", 
+            "multiValued": false, 
+            "possibleValues": [
+                "${WORKDIR}/truststores"
+            ], 
+            "type": "var", 
+            "name": "KEYTRUSTSTORES_DIR"
+        }
+    ], 
+    "myDir": "/modules", 
+    "nameResolvers": [], 
+    "conditions": [], 
+    "description": "The upgrade tool for 10.5"
+}
